@@ -338,13 +338,11 @@ busuanzi:
 # ---------------
 # In the sidebar, you can set some links to your friends or some web pages.
 # Set the links title
-links_title: coolqi 和他的朋友们   
-links:
-  AndroidDeveloper: https://developer.android.google.cn/
-  AndroidStudio: http://www.android-studio.org/
-  个人简书: https://www.jianshu.com/u/123a20a96441
-  个人微博: https://weibo.com/coolqiLi 
-  小二哥的 Android 站: https://www.jianshu.com/u/fd0b722ce11f
+#links_title: one more thing
+#links:
+#  AndroidDeveloper: https://developer.android.google.cn/
+#  AndroidStudio: http://www.android-studio.org/
+#  小二哥的 Android 站: https://www.jianshu.com/u/fd0b722ce11f
 
 # Follow Me Button
 follow:
