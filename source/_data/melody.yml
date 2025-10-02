@@ -74,8 +74,8 @@ highlight:
 social:
 # github: https://github.com/git-single-lee
 
-  weibo fab: https://weibo.com/coolqiLi
-  rss fas: https://Molunerfinn/atom.xml
+#   weibo fab: https://weibo.com/coolqiLi
+#   rss fas: https://Molunerfinn/atom.xml
 
 
 # Algolia search
@@ -211,13 +211,13 @@ flowchart:
   # flowchart: # optional, the source url of flowchart.js
   options: # options used for `drawSVG`
 
-QR_code:
-    - itemlist:
-       img: /img/zfb.jpg
-       text: 支付宝打赏
-    - itemlist:
-       img: /img/wechat.jpg
-       text: 微信打赏
+# QR_code:
+#     - itemlist:
+#        img: /img/zfb.jpg
+#        text: 支付宝打赏
+#     - itemlist:
+#        img: /img/wechat.jpg
+#        text: 微信打赏
 
 # Get a adv area for your post! You can put an adv or a music player and so on. It's up to you.
 adv:
@@ -347,5 +347,5 @@ busuanzi:
 # Follow Me Button
 follow:
   enable: true
-  url: 'https://github.com/git-single-lee'
+  url: 'https://lishuaiqi.top'
   text: 'Follow Me'
