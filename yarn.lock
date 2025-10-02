@@ -2631,6 +2631,11 @@ hexo-tag-plantuml@^1.0.0:
   resolved "https://registry.npmjs.org/hexo-tag-plantuml/-/hexo-tag-plantuml-1.0.0.tgz"
   integrity sha1-Yr0Y3mFPliDiKgxyhuuacI3tp8g=
 
+hexo-theme-melody@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.npmjs.org/hexo-theme-melody/-/hexo-theme-melody-1.9.1.tgz"
+  integrity sha512-YR7sdWgIOJIsxu3Vt3mjepqc3+c2xPKu5qhZA1rHTU07H8ejGTsLpYNnwxhyQA6jpxErHGSpFG+4B8ltTXQoXw==
+
 hexo-util@^0.6.0, hexo-util@^0.6.2:
   version "0.6.3"
   resolved "http://r.cnpmjs.org/hexo-util/download/hexo-util-0.6.3.tgz"
