@@ -1,0 +1,5 @@
+D:\MyBlog\coolqiBlogs\themes\melody\source\css\_layout\sidebar.styl
+D:\MyBlog\coolqiBlogs\themes\melody\source\css\var.styl
+D:\MyBlog\coolqiBlogs\themes\melody\source\js\sidebar.js
+D:\MyBlog\coolqiBlogs\themes\melody\source\js\head.js
+D:\MyBlog\coolqiBlogs\themes\melody\source\js\scroll.js
