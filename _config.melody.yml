@@ -28,9 +28,9 @@ theme_color:
 # Main menu navigation
 menu:
   Home: /
-  Archives: /archives
-  Tags: /tags
   Categories: /categories
+  Tags: /tags
+  Archives: /archives
   About: /about
 
 # Favicon
@@ -74,7 +74,6 @@ highlight:
 # ---------------
 social:
 # github: https://github.com/git-single-lee
-
 #   weibo fab: https://weibo.com/coolqiLi
 #   rss fas: https://Molunerfinn/atom.xml
 

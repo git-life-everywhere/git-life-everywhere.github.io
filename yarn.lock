@@ -2,6 +2,31 @@
 # yarn lockfile v1
 
 
+"@babel/helper-string-parser@^7.27.1":
+  version "7.27.1"
+  resolved "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.27.1.tgz"
+  integrity sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==
+
+"@babel/helper-validator-identifier@^7.27.1":
+  version "7.27.1"
+  resolved "https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.27.1.tgz"
+  integrity sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==
+
+"@babel/parser@^7.6.0", "@babel/parser@^7.9.6":
+  version "7.28.4"
+  resolved "https://registry.npmjs.org/@babel/parser/-/parser-7.28.4.tgz"
+  integrity sha512-yZbBqeM6TkpP9du/I2pUZnJsRMGGvOuIrhjzC1AwHwW+6he4mni6Bp/m8ijn0iOuZuPI2BfkCoSRunpyjnrQKg==
+  dependencies:
+    "@babel/types" "^7.28.4"
+
+"@babel/types@^7.28.4", "@babel/types@^7.6.1", "@babel/types@^7.9.6":
+  version "7.28.4"
+  resolved "https://registry.npmjs.org/@babel/types/-/types-7.28.4.tgz"
+  integrity sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==
+  dependencies:
+    "@babel/helper-string-parser" "^7.27.1"
+    "@babel/helper-validator-identifier" "^7.27.1"
+
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.14.0.tgz"
@@ -75,6 +100,11 @@ acorn@^4.0.4:
   version "4.0.13"
   resolved "http://r.cnpmjs.org/acorn/download/acorn-4.0.13.tgz"
   integrity sha1-EFSVrlNh1pe9GVyCUZLhrX8lN4c=
+
+acorn@^7.1.1:
+  version "7.4.1"
+  resolved "https://registry.npmjs.org/acorn/-/acorn-7.4.1.tgz"
+  integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
 acorn@~4.0.2:
   version "4.0.13"
@@ -268,6 +298,11 @@ asn1@~0.2.3:
   dependencies:
     safer-buffer "~2.1.0"
 
+assert-never@^1.2.1:
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/assert-never/-/assert-never-1.4.0.tgz"
+  integrity sha512-5oJg84os6NMQNl27T9LnZkvvqzvAnHu03ShCnoj6bsJwS7L8AO4lf+C/XjK/nvzEqQB744moC6V128RucQd1jA==
+
 assert-plus@^0.2.0:
   version "0.2.0"
   resolved "http://r.cnpmjs.org/assert-plus/download/assert-plus-0.2.0.tgz"
@@ -370,6 +405,13 @@ babel-runtime@^6.22.0:
   dependencies:
     core-js "^2.4.0"
     regenerator-runtime "^0.11.0"
+
+babel-walk@3.0.0-canary-5:
+  version "3.0.0-canary-5"
+  resolved "https://registry.npmjs.org/babel-walk/-/babel-walk-3.0.0-canary-5.tgz"
+  integrity sha512-GAwkz0AihzY5bkwIY5QDR+LvsRQgB/B+1foMPvi0FZPMl5fjD7ICiznUiBdLYMH1QYe6vqu4gWYytZOccLouFw==
+  dependencies:
+    "@babel/types" "^7.9.6"
 
 balanced-match@^1.0.0:
   version "1.0.0"
@@ -737,6 +779,13 @@ character-parser@^2.1.1:
   dependencies:
     is-regex "^1.0.3"
 
+character-parser@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/character-parser/-/character-parser-2.2.0.tgz"
+  integrity sha512-+UqJQjFEFaTAs3bNsF2j2kEN1baG/zghZbdqoYEDxGZtJo9LBzl1A+m0D4n3qKx8N2FNv8/Xp6yV9mQmBuptaw==
+  dependencies:
+    is-regex "^1.0.3"
+
 character-parser@1.2.1:
   version "1.2.1"
   resolved "http://r.cnpmjs.org/character-parser/download/character-parser-1.2.1.tgz"
@@ -1100,6 +1149,14 @@ constantinople@^3.0.1, constantinople@~3.0.1:
   integrity sha1-S5RdmTeQe82Y7ldRIsOBdRZUQUE=
   dependencies:
     acorn "^2.1.0"
+
+constantinople@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.npmjs.org/constantinople/-/constantinople-4.0.1.tgz"
+  integrity sha512-vCrqcSIq4//Gx74TXXCGnHpulY1dskqLTFGDmhrGxzeXL8lF8kvXv6mpNWlJj1uD4DW23D4ljAqbY4RRaaUZIw==
+  dependencies:
+    "@babel/parser" "^7.6.0"
+    "@babel/types" "^7.6.1"
 
 constants-browserify@^1.0.0:
   version "1.0.0"
@@ -2456,13 +2513,12 @@ hexo-generator-feed@^3.0.0:
     hexo-util "^2.1.0"
     nunjucks "^3.0.0"
 
-hexo-generator-index@^0.2.1:
-  version "0.2.1"
-  resolved "http://r.cnpmjs.org/hexo-generator-index/download/hexo-generator-index-0.2.1.tgz"
-  integrity sha1-kEIin8rHmq9wBXXaGTMr8/fuXF0=
+hexo-generator-index@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/hexo-generator-index/-/hexo-generator-index-4.0.0.tgz"
+  integrity sha512-KeM7mOCKWINGFAk1E+CkjMMgqFIv8oaRbGxR7ipkQAp44o4aopkVftma4sdIplOq9WQEWfVYDUK5gEv9J3nzUg==
   dependencies:
-    hexo-pagination "0.0.2"
-    object-assign "^4.0.1"
+    hexo-pagination "3.0.0"
 
 hexo-generator-json-content@^3.0.1:
   version "3.0.1"
@@ -2540,6 +2596,11 @@ hexo-pagination@0.0.2:
   dependencies:
     utils-merge "^1.0.0"
 
+hexo-pagination@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/hexo-pagination/-/hexo-pagination-3.0.0.tgz"
+  integrity sha512-8oo1iozloZo7TojPVYg4IxL3SJKCBdSJ908fTlIxIK7TWJIKdYnQlW31+12DBJ0NhVZA/lZisPObGF08wT8fKw==
+
 hexo-pdf@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/hexo-pdf/-/hexo-pdf-1.1.1.tgz"
@@ -2594,10 +2655,17 @@ hexo-renderer-marked@^0.3.2:
     object-assign "^4.1.1"
     strip-indent "^2.0.0"
 
+hexo-renderer-pug@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/hexo-renderer-pug/-/hexo-renderer-pug-3.0.0.tgz"
+  integrity sha512-PmbLx6VkNv+mPLOe97OC4F8iTzTuj665dSYN7bZKArd4M/q7gb2tNs29VGuAOC50i9tvWY2f+tPQimf0GZ9Hyw==
+  dependencies:
+    pug "^3.0.2"
+
 hexo-renderer-stylus@^0.3.3:
   version "0.3.3"
-  resolved "http://r.cnpmjs.org/hexo-renderer-stylus/download/hexo-renderer-stylus-0.3.3.tgz"
-  integrity sha1-xU6ifh/Y48ipp6hM+6itNUEiyn8=
+  resolved "https://registry.npmjs.org/hexo-renderer-stylus/-/hexo-renderer-stylus-0.3.3.tgz"
+  integrity sha512-Qv1o1EpYzd0qbIcjDFldaIorYMocBRnxM2UpbwWVBrrN9PWV/hwFUEagya3/DF+U//TM5Yiha36JLcbxk5gBBA==
   dependencies:
     nib "^1.1.2"
     stylus "^0.54.5"
@@ -3126,6 +3194,14 @@ is-expression@^3.0.0:
     acorn "~4.0.2"
     object-assign "^4.0.1"
 
+is-expression@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/is-expression/-/is-expression-4.0.0.tgz"
+  integrity sha512-zMIXX63sxzG3XrkHkrAPvm/OVZVSCPNkwMHU8oTX7/U3AL78I0QXCEICXUM13BIa8TYGZ68PiTKfQz3yaTNr4A==
+  dependencies:
+    acorn "^7.1.1"
+    object-assign "^4.1.1"
+
 is-extendable@^0.1.0, is-extendable@^0.1.1:
   version "0.1.1"
   resolved "http://r.cnpmjs.org/is-extendable/download/is-extendable-0.1.1.tgz"
@@ -3384,7 +3460,7 @@ js-base64@^2.1.9:
   resolved "http://r.cnpmjs.org/js-base64/download/js-base64-2.4.9.tgz"
   integrity sha1-dIkR+wT0imDEdxs3XKxFqA3xHAM=
 
-js-stringify@^1.0.1:
+js-stringify@^1.0.1, js-stringify@^1.0.2:
   version "1.0.2"
   resolved "http://r.cnpmjs.org/js-stringify/download/js-stringify-1.0.2.tgz"
   integrity sha1-Fzb939lyTyijaCrcYjCufk6Weds=
@@ -3503,8 +3579,8 @@ jstransformer@0.0.2:
 
 jstransformer@1.0.0:
   version "1.0.0"
-  resolved "http://r.cnpmjs.org/jstransformer/download/jstransformer-1.0.0.tgz"
-  integrity sha1-7Yvwkh4vPx7U1cGkT2hwntJHIsM=
+  resolved "https://registry.npmjs.org/jstransformer/-/jstransformer-1.0.0.tgz"
+  integrity sha512-C9YK3Rf8q6VAPDCCU9fnqo3mAfOH6vUGnMcP4AQAYIEpWtfGLpwOTmZ+igtdK5y+VvI2n3CyYSzy4Qh34eq24A==
   dependencies:
     is-promise "^2.0.0"
     promise "^7.0.1"
@@ -4900,6 +4976,15 @@ pug-attrs@^2.0.3:
     js-stringify "^1.0.1"
     pug-runtime "^2.0.4"
 
+pug-attrs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/pug-attrs/-/pug-attrs-3.0.0.tgz"
+  integrity sha512-azINV9dUtzPMFQktvTXciNAfAuVh/L/JCl0vtPCwvOA21uZrC08K/UnmrL+SXGEVc1FwzjW62+xw5S/uaLj6cA==
+  dependencies:
+    constantinople "^4.0.1"
+    js-stringify "^1.0.2"
+    pug-runtime "^3.0.0"
+
 pug-code-gen@^2.0.1:
   version "2.0.1"
   resolved "http://r.cnpmjs.org/pug-code-gen/download/pug-code-gen-2.0.1.tgz"
@@ -4914,10 +4999,29 @@ pug-code-gen@^2.0.1:
     void-elements "^2.0.1"
     with "^5.0.0"
 
+pug-code-gen@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.npmjs.org/pug-code-gen/-/pug-code-gen-3.0.3.tgz"
+  integrity sha512-cYQg0JW0w32Ux+XTeZnBEeuWrAY7/HNE6TWnhiHGnnRYlCgyAUPoyh9KzCMa9WhcJlJ1AtQqpEYHc+vbCzA+Aw==
+  dependencies:
+    constantinople "^4.0.1"
+    doctypes "^1.1.0"
+    js-stringify "^1.0.2"
+    pug-attrs "^3.0.0"
+    pug-error "^2.1.0"
+    pug-runtime "^3.0.1"
+    void-elements "^3.1.0"
+    with "^7.0.0"
+
 pug-error@^1.3.2:
   version "1.3.2"
   resolved "http://r.cnpmjs.org/pug-error/download/pug-error-1.3.2.tgz"
   integrity sha1-U659nSm7A89WRJOgJhCfVMR/XyY=
+
+pug-error@^2.0.0, pug-error@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/pug-error/-/pug-error-2.1.0.tgz"
+  integrity sha512-lv7sU9e5Jk8IeUheHata6/UThZ7RK2jnaaNztxfPYUY+VxZyk/ePVaNZ/vwmH8WqGvDz3LrNYt/+gA55NDg6Pg==
 
 pug-filters@^3.1.0:
   version "3.1.0"
@@ -4932,6 +5036,17 @@ pug-filters@^3.1.0:
     resolve "^1.1.6"
     uglify-js "^2.6.1"
 
+pug-filters@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/pug-filters/-/pug-filters-4.0.0.tgz"
+  integrity sha512-yeNFtq5Yxmfz0f9z2rMXGw/8/4i1cCFecw/Q7+D0V2DdtII5UvqE12VaZ2AY7ri6o5RNXiweGH79OCq+2RQU4A==
+  dependencies:
+    constantinople "^4.0.1"
+    jstransformer "1.0.0"
+    pug-error "^2.0.0"
+    pug-walk "^2.0.0"
+    resolve "^1.15.1"
+
 pug-lexer@^4.0.0:
   version "4.0.0"
   resolved "http://r.cnpmjs.org/pug-lexer/download/pug-lexer-4.0.0.tgz"
@@ -4941,6 +5056,15 @@ pug-lexer@^4.0.0:
     is-expression "^3.0.0"
     pug-error "^1.3.2"
 
+pug-lexer@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.npmjs.org/pug-lexer/-/pug-lexer-5.0.1.tgz"
+  integrity sha512-0I6C62+keXlZPZkOJeVam9aBLVP2EnbeDw3An+k0/QlqdwH6rv8284nko14Na7c0TtqtogfWXcRoFE4O4Ff20w==
+  dependencies:
+    character-parser "^2.2.0"
+    is-expression "^4.0.0"
+    pug-error "^2.0.0"
+
 pug-linker@^3.0.5:
   version "3.0.5"
   resolved "http://r.cnpmjs.org/pug-linker/download/pug-linker-3.0.5.tgz"
@@ -4948,6 +5072,14 @@ pug-linker@^3.0.5:
   dependencies:
     pug-error "^1.3.2"
     pug-walk "^1.1.7"
+
+pug-linker@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/pug-linker/-/pug-linker-4.0.0.tgz"
+  integrity sha512-gjD1yzp0yxbQqnzBAdlhbgoJL5qIFJw78juN1NpTLt/mfPJ5VgC4BvkoD3G23qKzJtIIXBbcCt6FioLSFLOHdw==
+  dependencies:
+    pug-error "^2.0.0"
+    pug-walk "^2.0.0"
 
 pug-load@^2.0.11:
   version "2.0.11"
@@ -4957,6 +5089,14 @@ pug-load@^2.0.11:
     object-assign "^4.1.0"
     pug-walk "^1.1.7"
 
+pug-load@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmjs.org/pug-load/-/pug-load-3.0.0.tgz"
+  integrity sha512-OCjTEnhLWZBvS4zni/WUMjH2YSUosnsmjGBB1An7CsKQarYSWQ0GCVyd4eQPMFJqZ8w9xgs01QdiZXKVjk92EQ==
+  dependencies:
+    object-assign "^4.1.1"
+    pug-walk "^2.0.0"
+
 pug-parser@^5.0.0:
   version "5.0.0"
   resolved "http://r.cnpmjs.org/pug-parser/download/pug-parser-5.0.0.tgz"
@@ -4965,10 +5105,23 @@ pug-parser@^5.0.0:
     pug-error "^1.3.2"
     token-stream "0.0.1"
 
+pug-parser@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmjs.org/pug-parser/-/pug-parser-6.0.0.tgz"
+  integrity sha512-ukiYM/9cH6Cml+AOl5kETtM9NR3WulyVP2y4HOU45DyMim1IeP/OOiyEWRr6qk5I5klpsBnbuHpwKmTx6WURnw==
+  dependencies:
+    pug-error "^2.0.0"
+    token-stream "1.0.0"
+
 pug-runtime@^2.0.4:
   version "2.0.4"
   resolved "http://r.cnpmjs.org/pug-runtime/download/pug-runtime-2.0.4.tgz"
   integrity sha1-4XjhvaaKsujArPybztLFT9iM61g=
+
+pug-runtime@^3.0.0, pug-runtime@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmjs.org/pug-runtime/-/pug-runtime-3.0.1.tgz"
+  integrity sha512-L50zbvrQ35TkpHwv0G6aLSuueDRwc/97XdY8kL3tOT0FmhgG7UypU3VztfV/LATAvmUfYi4wNxSajhSAeNN+Kg==
 
 pug-strip-comments@^1.0.3:
   version "1.0.3"
@@ -4977,10 +5130,22 @@ pug-strip-comments@^1.0.3:
   dependencies:
     pug-error "^1.3.2"
 
+pug-strip-comments@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/pug-strip-comments/-/pug-strip-comments-2.0.0.tgz"
+  integrity sha512-zo8DsDpH7eTkPHCXFeAk1xZXJbyoTfdPlNR0bK7rpOMuhBYb0f5qUVCO1xlsitYd3w5FQTK7zpNVKb3rZoUrrQ==
+  dependencies:
+    pug-error "^2.0.0"
+
 pug-walk@^1.1.7:
   version "1.1.7"
   resolved "http://r.cnpmjs.org/pug-walk/download/pug-walk-1.1.7.tgz"
   integrity sha1-wA1cUSi6xYBr7BXSt+fNq+QlMfM=
+
+pug-walk@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/pug-walk/-/pug-walk-2.0.0.tgz"
+  integrity sha512-yYELe9Q5q9IQhuvqsZNwA5hfPkMJ8u92bQLIMcsMxf/VADjNtEYptU+inlufAFYcWdHlwNfZOEnOOQrZrcyJCQ==
 
 pug@^2.0.0-rc.1:
   version "2.0.3"
@@ -4995,6 +5160,20 @@ pug@^2.0.0-rc.1:
     pug-parser "^5.0.0"
     pug-runtime "^2.0.4"
     pug-strip-comments "^1.0.3"
+
+pug@^3.0.2:
+  version "3.0.3"
+  resolved "https://registry.npmjs.org/pug/-/pug-3.0.3.tgz"
+  integrity sha512-uBi6kmc9f3SZ3PXxqcHiUZLmIXgfgWooKWXcwSGwQd2Zi5Rb0bT14+8CJjJgI8AB+nndLaNgHGrcc6bPIB665g==
+  dependencies:
+    pug-code-gen "^3.0.3"
+    pug-filters "^4.0.0"
+    pug-lexer "^5.0.1"
+    pug-linker "^4.0.0"
+    pug-load "^3.0.0"
+    pug-parser "^6.0.0"
+    pug-runtime "^3.0.1"
+    pug-strip-comments "^2.0.0"
 
 pump@^2.0.0:
   version "2.0.1"
@@ -5278,7 +5457,7 @@ resolve-url@^0.2.1:
   resolved "http://r.cnpmjs.org/resolve-url/download/resolve-url-0.2.1.tgz"
   integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
 
-resolve@^1.1.6, resolve@^1.10.0, resolve@^1.20.0:
+resolve@^1.1.6, resolve@^1.10.0, resolve@^1.15.1, resolve@^1.20.0:
   version "1.22.10"
   resolved "https://registry.npmjs.org/resolve/-/resolve-1.22.10.tgz"
   integrity sha512-NPRy+/ncIMeDlTAsuqwKIiferiawhefFJtkNSW0qZJEqMEb+qBt/77B/jGeeek+F0uOeN05CDa6HXbbIgtVX4w==
@@ -6118,6 +6297,11 @@ token-stream@0.0.1:
   resolved "http://r.cnpmjs.org/token-stream/download/token-stream-0.0.1.tgz"
   integrity sha1-zu78cXp2xDFvEm0LnbqlXX598Bo=
 
+token-stream@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/token-stream/-/token-stream-1.0.0.tgz"
+  integrity sha512-VSsyNPPW74RpHwR8Fc21uubwHY7wMDeJLys2IX5zJNih+OnAnaifKHo+1LHT7DAdloQ7apeaaWg8l7qnf/TnEg==
+
 tough-cookie@~2.3.0:
   version "2.3.4"
   resolved "http://r.cnpmjs.org/tough-cookie/download/tough-cookie-2.3.4.tgz"
@@ -6408,6 +6592,11 @@ void-elements@^2.0.1, void-elements@~2.0.1:
   resolved "http://r.cnpmjs.org/void-elements/download/void-elements-2.0.1.tgz"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
+void-elements@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.npmjs.org/void-elements/-/void-elements-3.1.0.tgz"
+  integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
+
 warehouse@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmjs.org/warehouse/-/warehouse-6.0.0.tgz"
@@ -6515,6 +6704,16 @@ with@^5.0.0:
   dependencies:
     acorn "^3.1.0"
     acorn-globals "^3.0.0"
+
+with@^7.0.0:
+  version "7.0.2"
+  resolved "https://registry.npmjs.org/with/-/with-7.0.2.tgz"
+  integrity sha512-RNGKj82nUPg3g5ygxkQl0R937xLyho1J24ItRCBTr/m1YnZkzJy1hUiHUJrc/VlsDQzsCnInEGSg3bci0Lmd4w==
+  dependencies:
+    "@babel/parser" "^7.9.6"
+    "@babel/types" "^7.9.6"
+    assert-never "^1.2.1"
+    babel-walk "3.0.0-canary-5"
 
 with@~4.0.0:
   version "4.0.3"

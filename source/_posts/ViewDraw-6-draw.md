@@ -1,17 +1,14 @@
 # ViewDraw 第六篇 draw 流程分析
 
+
 title: ViewDraw 第六篇 draw 流程分析
 date: 2020/04/21 20:46:25 
-catalog: true
 categories: 
-
-- View 视图
-- View 的加载和绘制
-
-tags: ViewDraw
-copyright: true
-
-------
+ - View 视图
+ - View 的加载和绘制
+tags: 
+ - ViewDraw
+---
 
 本篇文章基于 Android N - 7.1.1 主要分析下 draw 方法的执行流程；
 

@@ -1,17 +1,13 @@
 # ViewDraw 第四篇 measure 流程分析
 
 title: ViewDraw 第四篇 measure 流程分析
+categories:
+  - View 视图
+  - View 的加载和绘制
+tags:
+  - ViewDraw
 date: 2020/04/15 20:46:25 
-catalog: true
-categories: 
-
-- View 视图
-- View 的加载和绘制
-
-tags: ViewDraw
-copyright: true
-
-------
+---
 
 本篇文章基于 Android N - 7.1.1 主要分析下 measure 方法的执行流程；
 

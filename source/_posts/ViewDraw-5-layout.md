@@ -1,16 +1,14 @@
 # ViewDraw 第五篇 layout 流程分析
 
+
 title: ViewDraw 第五篇 layout 流程分析
 date: 2020/04/21 20:46:25 
-catalog: true
 categories: 
-- View 视图
-- View 的加载和绘制
-
-tags: ViewDraw
-copyright: true
-
-------
+ - View 视图
+ - View 的加载和绘制
+tags: 
+ - ViewDraw
+---
 
 基于 Android N 分析下 View 的 layout，N 虽然看起来略有些旧，但是框架的核心思想才是最重要的，新的一天开始了。
 
