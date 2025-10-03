@@ -1,0 +1,112 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="EventBus 第一篇 - 基本使用"><meta name="keywords" content="EventBus"><meta name="author" content="Li Shuaiqi"><meta name="copyright" content="Li Shuaiqi"><title>EventBus 第一篇 - 基本使用 | Li Shuaiqi's Blog</title><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://unpkg.com"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitment/style/default.min.css"><script src="https://cdn.jsdelivr.net/npm/gitment/dist/gitment.browser.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?b7acef5306e54116ad8a99e8b753a92d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 8.0.0"><link rel="alternate" href="/atom.xml" title="Li Shuaiqi's Blog" type="application/atom+xml">
+</head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-%E5%BC%95%E5%85%A5"><span class="toc-text">1 引入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">2 基本使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="toc-text">3 线程模型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%E5%88%9D%E8%AF%86"><span class="toc-text">4 整体架构初识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-text">5 总结</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.jpg"></div><div class="author-info__name text-center">Li Shuaiqi</div><div class="author-info__description text-center">“Hi，我是李帅奇，Android 开发工程师，熬夜星人。”</div><div class="follow-button"><a href="https://lishuaiqi.top">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">90</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">23</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">30</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">one more thing</div><a class="author-info-links__name text-center" href="https://developer.android.google.cn/">AndroidDeveloper</a><a class="author-info-links__name text-center" href="http://www.android-studio.org/">AndroidStudio</a><a class="author-info-links__name text-center" href="https://juejin.cn/post/7366896388658593803">小二哥的 Android 站</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/blog-bg.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Li Shuaiqi's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a><a class="site-page" href="/about">About</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">EventBus 第一篇 - 基本使用</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-08-19</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">开源库源码分析</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%BC%80%E6%BA%90%E5%BA%93%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/EventBus/">EventBus</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">801</span><span class="post-meta__separator">|</span><span>阅读时长: 2 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>本系列文章主要分析 EventBus 框架的架构和原理，基于最新的 <strong>3.1.0</strong> 版本。</p>
+<blockquote>
+<p>这是 EventBus 开源库的地址，大家可以直接访问<br><a href="https://github.com/greenrobot/EventBus">https://github.com/greenrobot/EventBus</a></p>
+</blockquote>
+<p>本篇文章是 EventBus 的第一篇，主要总结下基本的使用；</p>
+<p>Eventbus 翻译过来就是事件总线，用于简化组件和组件，线程和线程之间的消息通信，可以捆成是 Handler + Thread 的替代品。</p>
+<h1 id="1-引入"><a href="#1-引入" class="headerlink" title="1 引入"></a>1 引入</h1><p>Eventbus 的引入没有 ARouter 那么复杂，他的核心 api 和 AnnotationProcessor 是在同一个 jar 中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compile <span class="string">&#x27;org.greenrobot:eventbus:3.0.0&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>以上就是引入的方式，很简单；</p>
+<h1 id="2-基本使用"><a href="#2-基本使用" class="headerlink" title="2 基本使用"></a>2 基本使用</h1><p>Eventbus 的使用还是很简单的。</p>
+<ul>
+<li>首先，<strong>我们要在组件生命周期的开始 register、生命周期的结束 unregister</strong>：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().register(<span class="built_in">this</span>);</span><br><span class="line"></span><br><span class="line">EventBus.getDefault().unregister(<span class="built_in">this</span>);</span><br></pre></td></tr></table></figure>
+<p>我们之后将组件 register 到 EventBus 中，该组件才能监听到事件；</p>
+<p>当然，当组件生命周期结束后，需要 unregister！</p>
+<ul>
+<li>接着，<strong>我们要定义接收 Event 的方法</strong>；</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subscribe</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onEventMainThread</span><span class="params">(MessageEvent event)</span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 EventBus 中，处理 event 的方法需要被注解  @Subscribe 修饰，这是因为 EventBus 的机制，提供了一个 EventBusAnnotationProcessor，他负责自动处理   @Subscribe 修饰的方法，动态生成管理集合。</p>
+<p>在事件分发的时候，会自动调用我们的方法；</p>
+<p>对于注解 @Subscribe，我们可以设置其属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Subscribe(threadMode = ThreadMode.MAIN, sticky = true, priority = 2)</span></span><br></pre></td></tr></table></figure>
+<p>1、threadMode 用于指定线程模型（默认为 POSTING ），EventBus 提供了四种线程模型，下面会简单介绍；</p>
+<p>2、sticky 表示方法是否开启粘性事件；</p>
+<p>3、priority 表示多个订阅者收到事件的优先级顺序；</p>
+<ul>
+<li>最后，我们要<strong>发送消息</strong></li>
+</ul>
+<p>消息这里分为普通消息和粘性消息，和 broadcast 很类似哦：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EventBus.getDefault().postSticky(..)</span><br><span class="line"></span><br><span class="line">EventBus.getDefault().post(...)</span><br></pre></td></tr></table></figure>
+<p>对于普通消息和粘性消息的处理，后面再分析。</p>
+<p>方法很简答，就不多说了～～</p>
+<h1 id="3-线程模型"><a href="#3-线程模型" class="headerlink" title="3 线程模型"></a>3 线程模型</h1><p>EventBus 提供了四种线程模型，定义在 ThreadMode.java 中：</p>
+<ul>
+<li><strong>POSTING</strong></li>
+</ul>
+<p>这是默认的线程模型，发布事件和接收事件在同一个线程进行，不要做耗时操作，因为可能是在 UI 线程，导致 ANR；</p>
+<ul>
+<li><strong>MAIN</strong></li>
+</ul>
+<p>接收事件在 UI 线程中进行；不要做耗时操作，会导致 ANR；</p>
+<ul>
+<li><strong>BACKGROUND</strong></li>
+</ul>
+<p>如果发送事件是在 UI 线程，那么接收事件会在一个新的子线程；</p>
+<p>如果发送事件是在子线程，那么接收事件和发送事件会在同一个子线程；</p>
+<p>不能处理 UI 相关操作！</p>
+<ul>
+<li><strong>ASYNC</strong></li>
+</ul>
+<p>接收事件始终会在一个新的子线程中，不能处理 UI 相关操作！</p>
+<blockquote>
+<p>这里简单分析了下线程模型，我们后面在分析源码的时候，再来分析每种线程模型的处理方式；</p>
+</blockquote>
+<h1 id="4-整体架构初识"><a href="#4-整体架构初识" class="headerlink" title="4 整体架构初识"></a>4 整体架构初识</h1><p>可以看到这种订阅和接收的关系，很类似于 Rxjava 的模式，其实就是观察者模式，这里直接引用 EventBus 官方的一张图来说明下：</p>
+<p><img src="https://coolqifiles.oss-cn-hangzhou.aliyuncs.com/uPic2/2022/10/24/23/1240.png" alt=""></p>
+<h1 id="5-总结"><a href="#5-总结" class="headerlink" title="5 总结"></a>5 总结</h1><p>本篇文章就到这里了，下一篇会从 @Subscribe 注解的处理入手，看下 EventBus 是如何处理该注解的；</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Li Shuaiqi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://lishuaiqi.top/2019/08/19/Eventbus-1-baseUsages/">https://lishuaiqi.top/2019/08/19/Eventbus-1-baseUsages/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://lishuaiqi.top">Li Shuaiqi's Blog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/EventBus/">EventBus</a></div><div class="social-share pull-right"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/08/27/Eventbus-2-SubscribeProcessor/"><i class="fa fa-chevron-left">  </i><span>EventBus 第二篇 - Subscribe 注解处理</span></a></div><div class="next-post pull-right"><a href="/2019/05/23/JsBridge3-Native--%3EH5Codes/"><span>JsBridge 第三篇 - Native 调用 H5 代码</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitment-container"></div><script>var gitment = new Gitment({
+  id: md5(decodeURI(location.pathname)),
+  owner: '',
+  repo: '',
+  oauth: {
+    client_id: '7b4efbcd7027d15749d6',
+    client_secret: '14b5d7e8580ee29f7aeca733a25c000795967448'
+  }
+})
+gitment.render('gitment-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/blog-bg.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2015 - 2025 By Li Shuaiqi</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

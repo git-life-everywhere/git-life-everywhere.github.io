@@ -1,0 +1,604 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="JobScheduler第 8 篇 - JobInfo JobStatus 和 JobParameters"><meta name="keywords" content="JobScheduler任务调度"><meta name="author" content="Li Shuaiqi"><meta name="copyright" content="Li Shuaiqi"><title>JobScheduler第 8 篇 - JobInfo JobStatus 和 JobParameters | Li Shuaiqi's Blog</title><link rel="shortcut icon" href="/img/favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.7.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.7.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css?version=1.7.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="dns-prefetch" href="https://unpkg.com"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/gitment/style/default.min.css"><script src="https://cdn.jsdelivr.net/npm/gitment/dist/gitment.browser.min.js"></script><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script><link rel="dns-prefetch" href="https://hm.baidu.com"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?b7acef5306e54116ad8a99e8b753a92d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();</script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  }
+} </script><meta name="generator" content="Hexo 8.0.0"><link rel="alternate" href="/atom.xml" title="Li Shuaiqi's Blog" type="application/atom+xml">
+</head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-JobInfo"><span class="toc-text">1 JobInfo</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-1-builder"><span class="toc-text">1.1 builder</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1-2-JobInfo"><span class="toc-text">1.2 JobInfo</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-JobStatus"><span class="toc-text">2 JobStatus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-JobParameters"><span class="toc-text">3 JobParameters</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.jpg"></div><div class="author-info__name text-center">Li Shuaiqi</div><div class="author-info__description text-center">“Hi，我是李帅奇，Android 开发工程师，熬夜星人。”</div><div class="follow-button"><a href="https://lishuaiqi.top">Follow Me</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">90</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">23</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">30</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">one more thing</div><a class="author-info-links__name text-center" href="https://developer.android.google.cn/">AndroidDeveloper</a><a class="author-info-links__name text-center" href="http://www.android-studio.org/">AndroidStudio</a><a class="author-info-links__name text-center" href="https://juejin.cn/post/7366896388658593803">小二哥的 Android 站</a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(/img/blog-bg.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Li Shuaiqi's Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a><a class="site-page" href="/about">About</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">JobScheduler第 8 篇 - JobInfo JobStatus 和 JobParameters</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2016-04-29</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">AndroidFramework源码分析</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/JobScheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">JobScheduler任务调度</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">2.5k</span><span class="post-meta__separator">|</span><span>阅读时长: 11 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>基于 Android 7.1.1 源码分析，本文为原创，转载请说明出处，谢谢！</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这一篇我们来分析一下 JSS 中的一些对象，看看我们能对 job 做哪些属性的设置：</p>
+<ul>
+<li>JobInfo </li>
+<li>JobStatus</li>
+<li>JobParameters</li>
+</ul>
+<h1 id="1-JobInfo"><a href="#1-JobInfo" class="headerlink" title="1 JobInfo"></a>1 JobInfo</h1><p>我们先来看看 JobInfo 的简化结构：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JobInfo</span> <span class="keyword">implements</span> <span class="title class_">Parcelable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">Builder</span> &#123;</span><br><span class="line">    </span><br><span class="line">        <span class="keyword">public</span> JobInfo <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> job;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里使用了设计模式中的建造者模式，通过 build 方法，返回最终的 JobInfo！</p>
+<h2 id="1-1-builder"><a href="#1-1-builder" class="headerlink" title="1.1 builder"></a>1.1 builder</h2><p>我们先来看看 buidler 中的方法和参数，我们用一张表格来说明一下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">属性默认值</th>
+<th style="text-align:left">属性解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">int mJobId</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">Job 的 Id</td>
+</tr>
+<tr>
+<td style="text-align:left">ComponentName mJobService</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">Job 对应的 JobService 组件</td>
+</tr>
+<tr>
+<td style="text-align:left">PersistableBundle mExtras</td>
+<td style="text-align:left">PersistableBundle.EMPTY</td>
+<td style="text-align:left">job 重启保留需要恢复的数据</td>
+</tr>
+<tr>
+<td style="text-align:left">int mPriority</td>
+<td style="text-align:left">PRIORITY_DEFAULT</td>
+<td style="text-align:left">job 优先级</td>
+</tr>
+<tr>
+<td style="text-align:left">int mFlags</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">-</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mRequiresCharging</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">约束条件：充电</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mRequiresDeviceIdle</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">约束条件：doze 模式</td>
+</tr>
+<tr>
+<td style="text-align:left">int mNetworkType</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">约束条件：网络类型</td>
+</tr>
+<tr>
+<td style="text-align:left">ArrayList<TriggerContentUri> mTriggerContentUris</TriggerContentUri></td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">约束条件：数据库 Uri</td>
+</tr>
+<tr>
+<td style="text-align:left">long mTriggerContentUpdateDelay</td>
+<td style="text-align:left">-1</td>
+<td style="text-align:left">数据库改变后，job 的延迟执行时间</td>
+</tr>
+<tr>
+<td style="text-align:left">long mTriggerContentMaxDelay</td>
+<td style="text-align:left">-1</td>
+<td style="text-align:left">数据库改变后，job 的最大延迟执行时间</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mIsPersisted</td>
+<td style="text-align:left"></td>
+<td style="text-align:left">job 是否重启保留，需要RECEIVE_BOOT_COMPLETED 权限</td>
+</tr>
+<tr>
+<td style="text-align:left">long mMinLatencyMillis</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 延迟执行时间</td>
+</tr>
+<tr>
+<td style="text-align:left">long mMaxExecutionDelayMillis</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 最大延迟执行时间，一旦达到该时间，无论条件是否满足，任务都会执行</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mIsPeriodic</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 是否是周期性的</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>boolean mHasEarlyConstraint</strong></td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 是否设置了延迟执行时间（周期和非周期都有）</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>boolean mHasLateConstraint</strong></td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 是否设置了最大延迟执行时间（周期和非周期都有）</td>
+</tr>
+<tr>
+<td style="text-align:left">long mIntervalMillis</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 执行的周期时间间隔</td>
+</tr>
+<tr>
+<td style="text-align:left">long mFlexMillis</td>
+<td style="text-align:left">-</td>
+<td style="text-align:left">job 执行周期末的一个时间窗，任何任务在这个时间窗中都可能被执行</td>
+</tr>
+<tr>
+<td style="text-align:left">long mInitialBackoffMillis</td>
+<td style="text-align:left">DEFAULT_INITIAL_BACKOFF_MILLIS</td>
+<td style="text-align:left">job 第一次尝试重试的等待间隔，单位为毫秒</td>
+</tr>
+<tr>
+<td style="text-align:left">int mBackoffPolicy</td>
+<td style="text-align:left">DEFAULT_BACKOFF_POLICY</td>
+<td style="text-align:left">job 对应的退避策略</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mBackoffPolicySet</td>
+<td style="text-align:left">False</td>
+<td style="text-align:left">job 是否设置了设置退避 / 重试策略，类似网络原理中的冲突退避，当一个任务的调度失败时需要重试，所采取的策略。</td>
+</tr>
+</tbody>
+</table>
+<p>接着来看属性和其对应的方法：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">设置方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">int mJobId</td>
+<td style="text-align:left">Builder 构造器</td>
+</tr>
+<tr>
+<td style="text-align:left">ComponentName mJobService</td>
+<td style="text-align:left">Builder 构造器</td>
+</tr>
+<tr>
+<td style="text-align:left">PersistableBundle mExtras</td>
+<td style="text-align:left">setExtras</td>
+</tr>
+<tr>
+<td style="text-align:left">int mPriority</td>
+<td style="text-align:left">setPriority</td>
+</tr>
+<tr>
+<td style="text-align:left">int mFlags</td>
+<td style="text-align:left">setFlags</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mRequiresCharging</td>
+<td style="text-align:left">setRequiresCharging</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mRequiresDeviceIdle</td>
+<td style="text-align:left">setRequiresDeviceIdle</td>
+</tr>
+<tr>
+<td style="text-align:left">int mNetworkType</td>
+<td style="text-align:left">setRequiredNetworkType</td>
+</tr>
+<tr>
+<td style="text-align:left">ArrayList<TriggerContentUri> mTriggerContentUris</TriggerContentUri></td>
+<td style="text-align:left">addTriggerContentUri</td>
+</tr>
+<tr>
+<td style="text-align:left">long mTriggerContentUpdateDelay</td>
+<td style="text-align:left">setTriggerContentUpdateDelay</td>
+</tr>
+<tr>
+<td style="text-align:left">long mTriggerContentMaxDelay</td>
+<td style="text-align:left">setTriggerContentMaxDelay</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mIsPersisted</td>
+<td style="text-align:left">setPersisted</td>
+</tr>
+<tr>
+<td style="text-align:left">long mMinLatencyMillis</td>
+<td style="text-align:left">setMinimumLatency</td>
+</tr>
+<tr>
+<td style="text-align:left">long mMaxExecutionDelayMillis</td>
+<td style="text-align:left">setOverrideDeadline</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mIsPeriodic</td>
+<td style="text-align:left">setPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mHasEarlyConstraint</td>
+<td style="text-align:left">setMinimumLatency、setPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mHasLateConstraint</td>
+<td style="text-align:left">setOverrideDeadline、setPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">long mIntervalMillis</td>
+<td style="text-align:left">setPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">long mFlexMillis</td>
+<td style="text-align:left">setPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">long mInitialBackoffMillis</td>
+<td style="text-align:left">setBackoffCriteria</td>
+</tr>
+<tr>
+<td style="text-align:left">int mBackoffPolicy</td>
+<td style="text-align:left">setBackoffCriteria</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean mBackoffPolicySet</td>
+<td style="text-align:left">setBackoffCriteria</td>
+</tr>
+</tbody>
+</table>
+<p>接下来我们分析一下细节：</p>
+<blockquote>
+<p>网络类型的取值：</p>
+</blockquote>
+<ul>
+<li>NETWORK_TYPE_NONE：默认值。表示与网络状态无关</li>
+<li>NETWORK_TYPE_ANY：必须连接网络</li>
+<li>NETWORK_TYPE_NOT_ROAMING：必须连接非漫游的网络</li>
+<li>NETWORK_TYPE_UNMETERED：必须连接非计费的网络</li>
+</ul>
+<blockquote>
+<p>退避 | 重试策略：</p>
+</blockquote>
+<ul>
+<li>long mInitialBackoffMillis：第一次尝试重试的等待间隔，单位为毫秒，预设的取值有下面 2 种：<ul>
+<li>DEFAULT_INITIAL_BACKOFF_MILLIS：30 秒</li>
+<li>MAX_BACKOFF_DELAY_MILLIS：5 小时</li>
+</ul>
+</li>
+<li>int mBackoffPolicy：退避策略<ul>
+<li>BACKOFF_POLICY_LINEAR：0<ul>
+<li>对应的重试时间计算公式是:</li>
+<li><strong>current_time + initial_backoff_millis * num_failures, num_failures &gt;= 1</strong></li>
+</ul>
+</li>
+<li>BACKOFF_POLICY_EXPONENTIAL：1<ul>
+<li>对应的重试时间计算公式是： </li>
+<li><strong>current_time + initial_backoff_millis * 2 ^ (num_failures - 1), num_failures &gt;= 1</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>优先级的取值：</p>
+</blockquote>
+<ul>
+<li>PRIORITY_DEFAULT：0</li>
+<li>PRIORITY_SYNC_EXPEDITED：10</li>
+<li>PRIORITY_SYNC_INITIALIZATION：20</li>
+<li>PRIORITY_FOREGROUND_APP：30</li>
+<li>PRIORITY_TOP_APP：40</li>
+<li>PRIORITY_ADJ_OFTEN_RUNNING：-40</li>
+<li>PRIORITY_ADJ_ALWAYS_RUNNING：-80</li>
+</ul>
+<blockquote>
+<p>周期时间的取值：</p>
+</blockquote>
+<ul>
+<li>MIN_PERIOD_MILLIS：15 <em> 60 </em> 1000L，最小的执行周期时间，15 分钟</li>
+<li>MIN_FLEX_MILLIS：5 <em> 60 </em> 1000L，最小的时间窗，5分钟</li>
+</ul>
+<p>接下来，我们来分析下 build 方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> JobInfo <span class="title function_">build</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 至少要设置一个约束条件！</span></span><br><span class="line">    <span class="keyword">if</span> (!mHasEarlyConstraint &amp;&amp; !mHasLateConstraint &amp;&amp; !mRequiresCharging &amp;&amp;</span><br><span class="line">            !mRequiresDeviceIdle &amp;&amp; mNetworkType == NETWORK_TYPE_NONE &amp;&amp;</span><br><span class="line">            mTriggerContentUris == <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;You&#x27;re trying to build a job with no &quot;</span> +</span><br><span class="line">                <span class="string">&quot;constraints, this is not allowed.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    mExtras = <span class="keyword">new</span> <span class="title class_">PersistableBundle</span>(mExtras);  <span class="comment">// Make our own copy.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 周期性的 job 不能设置延迟执行时间和最大延迟执行时间，也不能设置数据库变化的约束条件！</span></span><br><span class="line">    <span class="comment">// 重启保留的 job 不能设置数据库变化的约束条件！</span></span><br><span class="line">    <span class="comment">// 设置了退避 | 重试策略的 job 不能设置 DOZE 约束条件！</span></span><br><span class="line">    <span class="keyword">if</span> (mIsPeriodic &amp;&amp; (mMaxExecutionDelayMillis != <span class="number">0L</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Can&#x27;t call setOverrideDeadline() on a &quot;</span> +</span><br><span class="line">                <span class="string">&quot;periodic job.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mIsPeriodic &amp;&amp; (mMinLatencyMillis != <span class="number">0L</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Can&#x27;t call setMinimumLatency() on a &quot;</span> +</span><br><span class="line">                <span class="string">&quot;periodic job&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mIsPeriodic &amp;&amp; (mTriggerContentUris != <span class="literal">null</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Can&#x27;t call addTriggerContentUri() on a &quot;</span> +</span><br><span class="line">                <span class="string">&quot;periodic job&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mIsPersisted &amp;&amp; (mTriggerContentUris != <span class="literal">null</span>)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Can&#x27;t call addTriggerContentUri() on a &quot;</span> +</span><br><span class="line">                <span class="string">&quot;persisted job&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (mBackoffPolicySet &amp;&amp; mRequiresDeviceIdle) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;An idle mode job will not respect any&quot;</span> +</span><br><span class="line">                <span class="string">&quot; back-off policy, so calling setBackoffCriteria with&quot;</span> +</span><br><span class="line">                <span class="string">&quot; setRequiresDeviceIdle is an error.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建 JobInfo 对象！</span></span><br><span class="line">    <span class="type">JobInfo</span> <span class="variable">job</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JobInfo</span>(<span class="built_in">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (job.isPeriodic()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (job.intervalMillis != job.getIntervalMillis()) &#123;</span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">            builder.append(<span class="string">&quot;Specified interval for &quot;</span>)</span><br><span class="line">                    .append(String.valueOf(mJobId))</span><br><span class="line">                    .append(<span class="string">&quot; is &quot;</span>);</span><br><span class="line">            formatDuration(mIntervalMillis, builder);</span><br><span class="line">            builder.append(<span class="string">&quot;. Clamped to &quot;</span>);</span><br><span class="line">            formatDuration(job.getIntervalMillis(), builder);</span><br><span class="line">            Log.w(TAG, builder.toString());</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (job.flexMillis != job.getFlexMillis()) &#123;</span><br><span class="line">            <span class="type">StringBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">            builder.append(<span class="string">&quot;Specified flex for &quot;</span>)</span><br><span class="line">                    .append(String.valueOf(mJobId))</span><br><span class="line">                    .append(<span class="string">&quot; is &quot;</span>);</span><br><span class="line">            formatDuration(mFlexMillis, builder);</span><br><span class="line">            builder.append(<span class="string">&quot;. Clamped to &quot;</span>);</span><br><span class="line">            formatDuration(job.getFlexMillis(), builder);</span><br><span class="line">            Log.w(TAG, builder.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> job;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>这里我们来总结一下：</p>
+<ul>
+<li>至少要设置一个约束条件！</li>
+<li>周期性的 job 不能设置延迟执行时间和最大延迟执行时间，也不能设置数据库变化的约束条件！</li>
+<li>重启保留的 job 不能设置数据库变化的约束条件！</li>
+<li>设置了退避 | 重试策略的 job 不能设置 DOZE 约束条件！</li>
+</ul>
+<h2 id="1-2-JobInfo"><a href="#1-2-JobInfo" class="headerlink" title="1.2 JobInfo"></a>1.2 JobInfo</h2><p>我们来看看构造器：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="title function_">JobInfo</span><span class="params">(JobInfo.Builder b)</span> &#123;</span><br><span class="line">    jobId = b.mJobId;</span><br><span class="line">    extras = b.mExtras;</span><br><span class="line">    service = b.mJobService;</span><br><span class="line">    requireCharging = b.mRequiresCharging;</span><br><span class="line">    requireDeviceIdle = b.mRequiresDeviceIdle;</span><br><span class="line">    triggerContentUris = b.mTriggerContentUris != <span class="literal">null</span></span><br><span class="line">            ? b.mTriggerContentUris.toArray(<span class="keyword">new</span> <span class="title class_">TriggerContentUri</span>[b.mTriggerContentUris.size()])</span><br><span class="line">            : <span class="literal">null</span>;</span><br><span class="line">    triggerContentUpdateDelay = b.mTriggerContentUpdateDelay;</span><br><span class="line">    triggerContentMaxDelay = b.mTriggerContentMaxDelay;</span><br><span class="line">    networkType = b.mNetworkType;</span><br><span class="line">    minLatencyMillis = b.mMinLatencyMillis;</span><br><span class="line">    maxExecutionDelayMillis = b.mMaxExecutionDelayMillis;</span><br><span class="line">    isPeriodic = b.mIsPeriodic;</span><br><span class="line">    isPersisted = b.mIsPersisted;</span><br><span class="line">    intervalMillis = b.mIntervalMillis;</span><br><span class="line">    flexMillis = b.mFlexMillis;</span><br><span class="line">    initialBackoffMillis = b.mInitialBackoffMillis;</span><br><span class="line">    backoffPolicy = b.mBackoffPolicy;</span><br><span class="line">    hasEarlyConstraint = b.mHasEarlyConstraint;</span><br><span class="line">    hasLateConstraint = b.mHasLateConstraint;</span><br><span class="line">    priority = b.mPriority;</span><br><span class="line">    flags = b.mFlags;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>可以看出，参数的意义和 builder 是一样的，我们来看看：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">获取方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">int jobId</td>
+<td style="text-align:left">getId</td>
+</tr>
+<tr>
+<td style="text-align:left">ComponentName service</td>
+<td style="text-align:left">getService</td>
+</tr>
+<tr>
+<td style="text-align:left">PersistableBundle extras</td>
+<td style="text-align:left">getExtras</td>
+</tr>
+<tr>
+<td style="text-align:left">int priority</td>
+<td style="text-align:left">getPriority</td>
+</tr>
+<tr>
+<td style="text-align:left">int flags</td>
+<td style="text-align:left">getFlags</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean requiresCharging</td>
+<td style="text-align:left">isRequireCharging</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean requiresDeviceIdle</td>
+<td style="text-align:left">isRequireDeviceIdle</td>
+</tr>
+<tr>
+<td style="text-align:left">int networkType</td>
+<td style="text-align:left">getNetworkType</td>
+</tr>
+<tr>
+<td style="text-align:left">ArrayList<TriggerContentUri> triggerContentUris</TriggerContentUri></td>
+<td style="text-align:left">getTriggerContentUris</td>
+</tr>
+<tr>
+<td style="text-align:left">long triggerContentUpdateDelay</td>
+<td style="text-align:left">getTriggerContentUpdateDelay</td>
+</tr>
+<tr>
+<td style="text-align:left">long triggerContentMaxDelay</td>
+<td style="text-align:left">getTriggerContentMaxDelay</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean isPersisted</td>
+<td style="text-align:left">isPersisted</td>
+</tr>
+<tr>
+<td style="text-align:left">long minLatencyMillis</td>
+<td style="text-align:left">getMinLatencyMillis</td>
+</tr>
+<tr>
+<td style="text-align:left">long maxExecutionDelayMillis</td>
+<td style="text-align:left">getMaxExecutionDelayMillis</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean isPeriodic</td>
+<td style="text-align:left">isPeriodic</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean hasEarlyConstraint</td>
+<td style="text-align:left">hasEarlyConstraint</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean hasLateConstraint</td>
+<td style="text-align:left">hasLateConstraint</td>
+</tr>
+<tr>
+<td style="text-align:left">long intervalMillis</td>
+<td style="text-align:left">getIntervalMillis</td>
+</tr>
+<tr>
+<td style="text-align:left">long flexMillis</td>
+<td style="text-align:left">getFlexMillis</td>
+</tr>
+<tr>
+<td style="text-align:left">long initialBackoffMillis</td>
+<td style="text-align:left">getInitialBackoffMillis</td>
+</tr>
+<tr>
+<td style="text-align:left">int backoffPolicy</td>
+<td style="text-align:left">getBackoffPolicy</td>
+</tr>
+</tbody>
+</table>
+<p>我们接着看：</p>
+<h1 id="2-JobStatus"><a href="#2-JobStatus" class="headerlink" title="2 JobStatus"></a>2 JobStatus</h1><p>我们 schedule 一个 jobInfo 后，JSS 会创建对应的 JobStatus，我们先来看看他的构造器：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过一个 JobStatus 创建！</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">JobStatus</span><span class="params">(JobStatus jobStatus)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>(jobStatus.getJob(), jobStatus.getUid(),</span><br><span class="line">            jobStatus.getSourcePackageName(), jobStatus.getSourceUserId(),</span><br><span class="line">            jobStatus.getSourceTag(), jobStatus.getNumFailures(),</span><br><span class="line">            jobStatus.getEarliestRunTime(), jobStatus.getLatestRunTimeElapsed());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从本地文件 Jobs.xml 中读取数据，创建 JobStatus</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">JobStatus</span><span class="params">(JobInfo job, <span class="type">int</span> callingUid, String sourcePackageName, <span class="type">int</span> sourceUserId,</span></span><br><span class="line"><span class="params">        String sourceTag, <span class="type">long</span> earliestRunTimeElapsedMillis, <span class="type">long</span> latestRunTimeElapsedMillis)</span> &#123;</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">this</span>(job, callingUid, sourcePackageName, sourceUserId, sourceTag, <span class="number">0</span>,</span><br><span class="line">            earliestRunTimeElapsedMillis, latestRunTimeElapsedMillis);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据参数创建一个 JobStatus</span></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">JobStatus</span><span class="params">(JobStatus rescheduling, <span class="type">long</span> newEarliestRuntimeElapsedMillis,</span></span><br><span class="line"><span class="params">                  <span class="type">long</span> newLatestRuntimeElapsedMillis, <span class="type">int</span> backoffAttempt)</span> &#123;</span><br><span class="line">                  </span><br><span class="line">    <span class="built_in">this</span>(rescheduling.job, rescheduling.getUid(),</span><br><span class="line">            rescheduling.getSourcePackageName(), rescheduling.getSourceUserId(),</span><br><span class="line">            rescheduling.getSourceTag(), backoffAttempt, newEarliestRuntimeElapsedMillis,</span><br><span class="line">            newLatestRuntimeElapsedMillis);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>最终都会调用这个构造器方法，参数传递：</p>
+<ul>
+<li>JobInfo job：jobInfo 对象</li>
+<li>int callingUid：job 所属进程的 uid</li>
+<li>String sourcePackageName：job 所属应用的包名</li>
+<li>int sourceUserId：job所属的设备用户</li>
+<li>String tag：</li>
+<li>int numFailures：失败次数</li>
+<li>long earliestRunTimeElapsedMillis： 最早执行时间</li>
+<li>long latestRunTimeElapsedMillis：最晚执行时间</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="title function_">JobStatus</span><span class="params">(JobInfo job, <span class="type">int</span> callingUid, String sourcePackageName,</span></span><br><span class="line"><span class="params">        <span class="type">int</span> sourceUserId, String tag, <span class="type">int</span> numFailures, <span class="type">long</span> earliestRunTimeElapsedMillis,</span></span><br><span class="line"><span class="params">        <span class="type">long</span> latestRunTimeElapsedMillis)</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.job = job;</span><br><span class="line">    <span class="built_in">this</span>.callingUid = callingUid;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">tempSourceUid</span> <span class="operator">=</span> -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (sourceUserId != -<span class="number">1</span> &amp;&amp; sourcePackageName != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            tempSourceUid = AppGlobals.getPackageManager().getPackageUid(sourcePackageName, <span class="number">0</span>,</span><br><span class="line">                    sourceUserId);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException ex) &#123;</span><br><span class="line">            <span class="comment">// Can&#x27;t happen, PackageManager runs in the same process.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (tempSourceUid == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="built_in">this</span>.sourceUid = callingUid;</span><br><span class="line">        <span class="built_in">this</span>.sourceUserId = UserHandle.getUserId(callingUid);</span><br><span class="line">        <span class="built_in">this</span>.sourcePackageName = job.getService().getPackageName();</span><br><span class="line">        <span class="built_in">this</span>.sourceTag = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.sourceUid = tempSourceUid;</span><br><span class="line">        <span class="built_in">this</span>.sourceUserId = sourceUserId;</span><br><span class="line">        <span class="built_in">this</span>.sourcePackageName = sourcePackageName;</span><br><span class="line">        <span class="built_in">this</span>.sourceTag = tag;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.batteryName = <span class="built_in">this</span>.sourceTag != <span class="literal">null</span></span><br><span class="line">            ? <span class="built_in">this</span>.sourceTag + <span class="string">&quot;:&quot;</span> + job.getService().getPackageName()</span><br><span class="line">            : job.getService().flattenToShortString();</span><br><span class="line">    <span class="built_in">this</span>.tag = <span class="string">&quot;*job*/&quot;</span> + <span class="built_in">this</span>.batteryName;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.earliestRunTimeElapsedMillis = earliestRunTimeElapsedMillis;</span><br><span class="line">    <span class="built_in">this</span>.latestRunTimeElapsedMillis = latestRunTimeElapsedMillis;</span><br><span class="line">    <span class="built_in">this</span>.numFailures = numFailures;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// requiredConstraints 使用二进制位记录 job 所依赖的约束条件，依赖某个条件，对应的二进制位置为 1！</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">requiredConstraints</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (job.getNetworkType() == JobInfo.NETWORK_TYPE_ANY) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_CONNECTIVITY;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (job.getNetworkType() == JobInfo.NETWORK_TYPE_UNMETERED) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_UNMETERED;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (job.getNetworkType() == JobInfo.NETWORK_TYPE_NOT_ROAMING) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_NOT_ROAMING;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (job.isRequireCharging()) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_CHARGING;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (earliestRunTimeElapsedMillis != NO_EARLIEST_RUNTIME) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_TIMING_DELAY;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (latestRunTimeElapsedMillis != NO_LATEST_RUNTIME) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_DEADLINE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (job.isRequireDeviceIdle()) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_IDLE;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (job.getTriggerContentUris() != <span class="literal">null</span>) &#123;</span><br><span class="line">        requiredConstraints |= CONSTRAINT_CONTENT_TRIGGER;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">this</span>.requiredConstraints = requiredConstraints;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以看到，构造函数很简单，没有多么复杂的，我们来总结一下，JobStatus 中的参数：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">参数</th>
+<th style="text-align:left">参数解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">JobInfo job</td>
+<td style="text-align:left">JobInfo 对象</td>
+</tr>
+<tr>
+<td style="text-align:left">int callingUid</td>
+<td style="text-align:left">调用者进程 uid</td>
+</tr>
+<tr>
+<td style="text-align:left">String batteryName</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">String sourcePackageName</td>
+<td style="text-align:left">job 所属应用的包名</td>
+</tr>
+<tr>
+<td style="text-align:left">int sourceUserId</td>
+<td style="text-align:left">job 所属设备用户</td>
+</tr>
+<tr>
+<td style="text-align:left">int sourceUid</td>
+<td style="text-align:left">job 所属应用的 uid</td>
+</tr>
+<tr>
+<td style="text-align:left">String sourceTag</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">String tag</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">long earliestRunTimeElapsedMillis</td>
+<td style="text-align:left">job 最早执行的时间</td>
+</tr>
+<tr>
+<td style="text-align:left">long latestRunTimeElapsedMillis</td>
+<td style="text-align:left">job 最晚执行的时间</td>
+</tr>
+<tr>
+<td style="text-align:left">int numFailures</td>
+<td style="text-align:left">job 执行失败的次数</td>
+</tr>
+<tr>
+<td style="text-align:left">int requiredConstraints</td>
+<td style="text-align:left">每个二进制位表示 job 所依赖的约束条件</td>
+</tr>
+<tr>
+<td style="text-align:left">int satisfiedConstraints = 0</td>
+<td style="text-align:left">每个二进制位表示 job 对应的约束条件是否满足</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean dozeWhitelisted</td>
+<td style="text-align:left">job 是否在 doze 白名单中</td>
+</tr>
+<tr>
+<td style="text-align:left">ArraySet<Uri> changedUris</Uri></td>
+<td style="text-align:left">job 依赖的数据库的 Uri</td>
+</tr>
+<tr>
+<td style="text-align:left">ArraySet<String> changedAuthorities</String></td>
+<td style="text-align:left">job 依赖的数据库的 Uri</td>
+</tr>
+<tr>
+<td style="text-align:left">int lastEvaluatedPriority</td>
+<td style="text-align:left">job 的优先级</td>
+</tr>
+<tr>
+<td style="text-align:left">int overrideState = 0</td>
+<td style="text-align:left">shell 命令用到</td>
+</tr>
+</tbody>
+</table>
+<p>我们继续来看：</p>
+<blockquote>
+<p>约束条件的表示</p>
+</blockquote>
+<ul>
+<li><p>用户可以设置的约束条件：</p>
+<ul>
+<li>CONSTRAINT_CHARGING：1&lt;&lt;0，充电</li>
+<li>CONSTRAINT_TIMING_DELAY：1&lt;&lt;1，延迟处理</li>
+<li>CONSTRAINT_DEADLINE：1&lt;&lt;2，超时处理</li>
+<li>CONSTRAINT_IDLE：1&lt;&lt;3，doze 模式</li>
+<li>CONSTRAINT_UNMETERED：1&lt;&lt;4，必须连接非漫游的网络</li>
+<li>CONSTRAINT_CONNECTIVITY：1&lt;&lt;5，必须连接网络</li>
+<li>CONSTRAINT_APP_NOT_IDLE：1&lt;&lt;6，app 处于非空闲状态</li>
+<li>CONSTRAINT_CONTENT_TRIGGER：1&lt;&lt;7，数据库变化</li>
+<li>CONSTRAINT_NOT_ROAMING：1&lt;&lt;9，必须连接非计费的网络</li>
+</ul>
+</li>
+<li><p>用户无法设置的约束条件：</p>
+<ul>
+<li>CONSTRAINT_DEVICE_NOT_DOZING：1&lt;&lt;8，不受 doze 模式限制，这个是由 DeviceIdleJobsController 获得 doze 模式白名单的更新，动态的对 uid 在白名单中的 job 进行设置的！</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>最早执行时间和最晚执行时间（）</p>
+</blockquote>
+<ul>
+<li>对于周期性 job<ul>
+<li>最早执行时间： </li>
+<li><strong>earliestRunTimeElapsedMillis = latestRunTimeElapsedMillis - job.getFlexMillis()</strong></li>
+<li>最晚执行时间： </li>
+<li><strong>latestRunTimeElapsedMillis = elapsedNow + job.getIntervalMillis()</strong></li>
+</ul>
+</li>
+<li>对于非周期性 job<ul>
+<li>最早执行时间：<ul>
+<li>设置了延迟执行时间：</li>
+<li><strong>earliestRunTimeElapsedMillis = elapsedNow + job.getMinLatencyMillis()</strong></li>
+<li>未设置延迟执行时间： </li>
+<li><strong>earliestRunTimeElapsedMillis = NO_EARLIEST_RUNTIME = 0L</strong></li>
+</ul>
+</li>
+<li>最晚执行时间：<ul>
+<li>设置了最大延迟执行时间：</li>
+<li><strong>latestRunTimeElapsedMillis = elapsedNow + job.getMaxExecutionDelayMillis()</strong></li>
+<li>未设置最大延迟执行时间： </li>
+<li><strong>latestRunTimeElapsedMillis = NO_LATEST_RUNTIME = Long.MAX_VALUE</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="3-JobParameters"><a href="#3-JobParameters" class="headerlink" title="3 JobParameters"></a>3 JobParameters</h1><p>JobParameters 是 job 执行时的参数，我们来看看他的参数：</p>
+<ul>
+<li>int jobId：job 的 id！</li>
+<li>PersistableBundle extras：重启恢复的数据！</li>
+<li>IBinder callback：JobSchedulerContext 的 binder 代理对象！</li>
+<li>boolean overrideDeadlineExpired：job 是否已经超时！</li>
+<li>Uri[] mTriggeredContentUris：监控的数据库的 Uri！</li>
+<li>String[] mTriggeredContentAuthorities：监控的数据库的 Authorities！</li>
+<li>int stopReason：job 停止的原因！<ul>
+<li>int REASON_CANCELED = 0，默认为 cancel</li>
+<li>int REASON_CONSTRAINTS_NOT_SATISFIED = 1</li>
+<li>int REASON_PREEMPT = 2</li>
+<li>int REASON_TIMEOUT = 3</li>
+<li>int REASON_DEVICE_IDLE = 4 </li>
+</ul>
+</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Li Shuaiqi</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://lishuaiqi.top/2016/04/29/JobScheduler8-JobInfoAndJobStatusAndJobParameters/">https://lishuaiqi.top/2016/04/29/JobScheduler8-JobInfoAndJobStatusAndJobParameters/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://lishuaiqi.top">Li Shuaiqi's Blog</a>！</span></div></div><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JobScheduler%E4%BB%BB%E5%8A%A1%E8%B0%83%E5%BA%A6/">JobScheduler任务调度</a></div><div class="social-share pull-right"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script><nav id="pagination"><div class="prev-post pull-left"><a href="/2016/05/01/BroadcastReceiver2-dynamicRegisterReceiver/"><i class="fa fa-chevron-left">  </i><span>BroadcastReceiver篇 2 - registerReceiver 动态注册流程分析</span></a></div><div class="next-post pull-right"><a href="/2016/04/27/JobScheduler7-JobSchedulerService-packageAndUidChange/"><span>JobScheduler第 7 篇 - JobSchedulerService - package and uid change</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="gitment-container"></div><script>var gitment = new Gitment({
+  id: md5(decodeURI(location.pathname)),
+  owner: '',
+  repo: '',
+  oauth: {
+    client_id: '7b4efbcd7027d15749d6',
+    client_secret: '14b5d7e8580ee29f7aeca733a25c000795967448'
+  }
+})
+gitment.render('gitment-container')</script></div></div><footer class="footer-bg" style="background-image: url(/img/blog-bg.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2015 - 2025 By Li Shuaiqi</div><div class="framework-info"><span>驱动 - </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="/js/third-party/anime.min.js"></script><script src="/js/third-party/jquery.min.js"></script><script src="/js/third-party/jquery.fancybox.min.js"></script><script src="/js/third-party/velocity.min.js"></script><script src="/js/third-party/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.7.0"></script><script src="/js/fancybox.js?version=1.7.0"></script><script src="/js/sidebar.js?version=1.7.0"></script><script src="/js/copy.js?version=1.7.0"></script><script src="/js/fireworks.js?version=1.7.0"></script><script src="/js/transition.js?version=1.7.0"></script><script src="/js/scroll.js?version=1.7.0"></script><script src="/js/head.js?version=1.7.0"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.jsdelivr.net/npm/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script src="/js/search/local-search.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
