@@ -30,16 +30,16 @@ $(function () {
       } else {
         $('#page-header').addClass('open-sidebar')
         $('body').velocity('stop').velocity({
-          paddingLeft: '400px'
+          paddingLeft: '300px'
         }, {
           duration: 200
         })
         $('#sidebar').velocity('stop').velocity({
-          translateX: '400px'
+          translateX: '300px'
         }, {
           duration: 200
         })
-        $('#toggle-sidebar').velocity('stop').velocity({ // 左下角的箭头
+        $('#toggle-sidebar').velocity('stop').velocity({
           rotateZ: '180deg',
           color: '#99a9bf'
         }, {

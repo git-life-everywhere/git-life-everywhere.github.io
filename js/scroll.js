@@ -1,6 +1,6 @@
 $(function () {
   var initTop = 0
-  // $('.toc-child').hide()  默认展开
+  $('.toc-child').hide()
 
   // main of scroll
   $(window).scroll(throttle(function (event) {
@@ -72,7 +72,14 @@ $(function () {
 
   // scroll to a head(anchor)
   function scrollToHead (anchor) {
-    $(anchor).velocity('stop').velocity('scroll', {
+    var item
+    try {
+      item = $(anchor)
+    } catch (e) {
+      // fix #286 support hexo v5
+      item = $(decodeURI(anchor))
+    }
+    item.velocity('stop').velocity('scroll', {
       duration: 500,
       easing: 'easeInOutQuart'
     })
@@ -136,7 +143,15 @@ $(function () {
 
     if (currentId === '') {
       $('.toc-link').removeClass('active')
-      // $('.toc-child').hide() 默认展开
+      $('.toc-child').hide()
+    }
+
+    // fix #286 since hexo v5.0.0 will
+    // encodeURI the toc-item href
+    var hexoVersion = GLOBAL_CONFIG.hexoVersion[0]
+
+    if (parseInt(hexoVersion) >= 5) {
+      currentId = encodeURI(currentId)
     }
 
     var currentActive = $('.toc-link.active')
@@ -158,7 +173,7 @@ $(function () {
         // excluding the currently active one
         .closest('.toc-item').siblings('.toc-item')
         // Hide their respective list of subsections
-        // .find('.toc-child').hide()  默认展开
+        .find('.toc-child').hide()
     }
   }
 })

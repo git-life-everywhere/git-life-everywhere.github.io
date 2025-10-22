@@ -162,7 +162,7 @@ table td {
   padding-top: 1.4rem;
   background: #292d3e;
   color: #a6accd;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 20px;
 }
 figure.highlight {
@@ -183,7 +183,7 @@ blockquote {
   background: rgba(27,31,35,0.05);
   color: #1f2d3d;
   word-wrap: break-word;
-  font-size: 12px;
+  font-size: 14px;
 }
 .article-container pre code {
   padding: 0;
@@ -321,7 +321,7 @@ blockquote {
   color: #c792ea;
 }
 .article-container pre .comment {
-  color: #ff5050;
+  color: #676e95;
 }
 .article-container pre .comment::-moz-selection {
   background: rgba(113,124,180,0.314);
@@ -759,12 +759,13 @@ footer.is-mobile {
 }
 .recent-post-item .content {
   margin-top: 0.5rem;
+  word-break: break-word;
 }
 .recent-post-item .content p {
   word-break: break-word;
 }
 .recent-post-item .content iframe {
-  width: 900px;
+  width: 700px;
   height: 393.75px;
 }
 .recent-post-item .article-type {
@@ -1160,7 +1161,7 @@ footer.is-mobile {
 }
 .layout {
   margin: 0 auto;
-  width: 900px;
+  width: 700px;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
@@ -1371,6 +1372,7 @@ a.fancybox:focus {
   outline: none;
 }
 .content img,
+#post img,
 #sidebar img {
   padding: 4px;
   max-width: 100%;
@@ -1378,6 +1380,7 @@ a.fancybox:focus {
   transition: all 0.2s;
 }
 .content img:hover,
+#post img:hover,
 #sidebar img:hover {
   box-shadow: 0 0 8px 0 rgba(232,237,250,0.6), 0 2px 4px 0 rgba(232,237,250,0.5);
 }
@@ -1504,10 +1507,10 @@ a.fancybox:focus {
 }
 @media screen and (min-width: 1300px) {
   .layout {
-    width: 1000px;
+    width: 900px;
   }
   .recent-post-item .content iframe {
-    width: 1000px;
+    width: 900px;
     height: 506.25px;
   }
 }
@@ -1520,11 +1523,11 @@ a.fancybox:focus {
 #sidebar {
   position: fixed;
   top: 0;
-  left: -400px;
+  left: -300px;
   z-index: 10;
-  overflow: scroll;
+  overflow-y: auto;
   padding: 1rem 0 2rem 0.5rem;
-  width: 400px;
+  width: 300px;
   height: 100%;
   background: #f6f8fa;
   box-shadow: -0.25rem 0 0.25rem rgba(232,237,250,0.6) inset;
@@ -1575,8 +1578,8 @@ a.fancybox:focus {
 }
 #sidebar .author-info__avatar {
   margin: 0 auto;
-  width: 8rem;
-  height: 8rem;
+  width: 5rem;
+  height: 5rem;
 }
 #sidebar .author-info__name {
   font-size: 0.8rem;
@@ -1658,39 +1661,22 @@ a.fancybox:focus {
 }
 #sidebar .sidebar-toc ol,
 #sidebar .sidebar-toc li {
-  display: block;
   list-style: none;
-  overflow: hidden;
 }
 #sidebar .sidebar-toc ol {
-  display: block;
   margin-top: 0.2rem;
   padding-left: 0.4rem;
 }
 #sidebar .sidebar-toc__title {
-  display: block;
   padding-right: 0.5rem;
   text-align: center;
   font-size: 18px;
 }
-#sidebar .sidebar-toc .toc-child {
-  display: block;
-}
-#sidebar .sidebar-toc .toc-item {
-  display: block;
-}
-#sidebar .sidebar-toc .toc-text {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-}
 #sidebar .sidebar-toc .toc-link {
   display: block;
   padding-left: 0.2rem;
-/*border-right: 3px solid transparent*/
+  border-right: 3px solid transparent;
   text-decoration: none;
-  font-size: 14px;
-  overflow: auto;
   transition: all 0.2s ease-in-out;
 }
 #sidebar .sidebar-toc .toc-link.active {
@@ -1701,7 +1687,7 @@ a.fancybox:focus {
 #sidebar .sidebar-toc__progress {
   position: relative;
   margin-top: -0.3rem;
-  padding-left: 0.5rem;
+  padding-left: 0.6rem;
   color: #000;
 }
 #sidebar .sidebar-toc__progress .progress-notice {
