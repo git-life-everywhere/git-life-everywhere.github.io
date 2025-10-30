@@ -233,11 +233,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
+    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
+    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -277,7 +277,7 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
+    <loc>https://lishuaiqi.top/2016/05/04/BroadcastReceiver3-unregisterReceiverAndTimeOut/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -285,11 +285,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
+    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/05/04/BroadcastReceiver3-unregisterReceiverAndTimeOut/</loc>
+    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -297,7 +297,7 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/01/19/Handler2-handlerSourceCode/</loc>
+    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -309,11 +309,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
+    <loc>https://lishuaiqi.top/2017/03/13/Handler5-messageSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/03/13/Handler5-messageSourceCode/</loc>
+    <loc>https://lishuaiqi.top/2017/01/19/Handler2-handlerSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -353,6 +353,10 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2017/07/06/Permission3-checkPermissions/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
@@ -370,10 +374,6 @@
   </url>
   <url>
     <loc>https://lishuaiqi.top/2016/06/13/Process6-dumpsysMeminfoToShowAdj/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
