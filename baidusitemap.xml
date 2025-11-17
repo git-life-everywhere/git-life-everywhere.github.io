@@ -281,15 +281,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/08/01/AppOps1-AppOpsServiceStartProcess/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/08/01/AppOps1-AppOpsServiceStartProcess/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -297,7 +293,19 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2016/05/10/BroadcastReceiver5-sendBroadcast/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/01/19/Handler2-handlerSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -313,23 +321,15 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2016/04/21/JobScheduler4-JobSchedulerService-cancel/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
+    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
     <loc>https://lishuaiqi.top/2016/04/25/JobScheduler6-JobSchedulerService-jobControll/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/01/19/Handler2-handlerSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -361,10 +361,6 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2017/08/25/Permission5-grantPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
@@ -378,6 +374,10 @@
   </url>
   <url>
     <loc>https://lishuaiqi.top/2018/05/03/PMS7-installThroughAdb/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
