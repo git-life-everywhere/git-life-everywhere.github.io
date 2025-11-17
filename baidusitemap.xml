@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lishuaiqi.top/2025/07/15/kotlin/kotlin-cotoutine-coroutine_flow/</loc>
-    <lastmod>2025-11-14</lastmod>
+    <lastmod>2025-11-17</lastmod>
   </url>
   <url>
     <loc>https://lishuaiqi.top/2025/05/12/kotlin/kotlin-cotoutine-coroutine_switch/</loc>
@@ -237,11 +237,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
+    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
+    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -281,7 +281,7 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
+    <loc>https://lishuaiqi.top/2017/08/01/AppOps1-AppOpsServiceStartProcess/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -289,15 +289,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/08/01/AppOps1-AppOpsServiceStartProcess/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2016/05/10/BroadcastReceiver5-sendBroadcast/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -317,11 +313,19 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2016/05/10/BroadcastReceiver5-sendBroadcast/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2017/02/27/Handler4-messageQueueSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
     <loc>https://lishuaiqi.top/2016/04/21/JobScheduler4-JobSchedulerService-cancel/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2016/04/29/JobScheduler8-JobInfoAndJobStatusAndJobParameters/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -333,15 +337,7 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/04/29/JobScheduler8-JobInfoAndJobStatusAndJobParameters/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2018/01/03/PMS1-PackageManagerServiceInit/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2018/02/17/PMS4-PMS_DATA_SCAN_START/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -349,19 +345,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2018/02/17/PMS4-PMS_DATA_SCAN_START/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2018/04/28/PMS6-PMS_READY/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/05/09/Permission1-permissionSettingsAndParse/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/07/06/Permission3-checkPermissions/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -369,15 +357,27 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2017/05/09/Permission1-permissionSettingsAndParse/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/07/06/Permission3-checkPermissions/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2017/08/25/Permission5-grantPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/08/13/Permission4-requestPermission/</loc>
+    <loc>https://lishuaiqi.top/2016/06/13/Process6-dumpsysMeminfoToShowAdj/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/06/13/Process6-dumpsysMeminfoToShowAdj/</loc>
+    <loc>https://lishuaiqi.top/2017/08/13/Permission4-requestPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
