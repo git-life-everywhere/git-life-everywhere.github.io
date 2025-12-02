@@ -321,7 +321,7 @@ blockquote {
   color: #c792ea;
 }
 .article-container pre .comment {
-  color: #4a4a4a;
+  color: '';
 }
 .article-container pre .comment::-moz-selection {
   background: rgba(97,97,97,0.314);

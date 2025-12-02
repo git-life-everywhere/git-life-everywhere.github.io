@@ -62,6 +62,35 @@
     
     
     <entry>
+      <title>kotlin 协程原理分析 - Flow 背压机制分析</title>
+      <link href="/2025/09/26/kotlin/kotlin-cotoutine-coroutine_flow_hotCold/"/>
+      <url>/2025/09/26/kotlin/kotlin-cotoutine-coroutine_flow_hotCold/</url>
+      
+        <content type="html"><![CDATA[<h2 id="0-前言"><a href="#0-前言" class="headerlink" title="0 前言"></a>0 前言</h2><p>本片文章，简单总结下 StateFlow 和 SharedFlow 原理，主要是从以下几个方向分析：</p><ul><li>冷流和热流的区别；</li><li>StateFlow 和 SharedFlow 的区别；</li><li>StateFlow 和 SharedFlow 的源码分析；</li></ul><h2 id="1-冷流和热流"><a href="#1-冷流和热流" class="headerlink" title="1 冷流和热流"></a>1 冷流和热流</h2>]]></content>
+      
+      
+      <categories>
+          
+          <category> kotlin </category>
+          
+          <category> 协程 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 协程 </tag>
+            
+            <tag> 协程切换 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>kotlin 协程原理分析 - Flow 原理分析</title>
       <link href="/2025/07/15/kotlin/kotlin-cotoutine-coroutine_flow/"/>
       <url>/2025/07/15/kotlin/kotlin-cotoutine-coroutine_flow/</url>
