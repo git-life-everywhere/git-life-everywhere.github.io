@@ -160,8 +160,8 @@ table td {
   margin: 1rem 0;
   padding: 0;
   padding-top: 1.4rem;
-  background: #0f111a;
-  color: #8f93a2;
+  background: #212121;
+  color: #eff;
   font-size: 14px;
   line-height: 20px;
 }
@@ -188,7 +188,7 @@ blockquote {
 .article-container pre code {
   padding: 0;
   background: none;
-  color: #8f93a2;
+  color: #eff;
   text-shadow: none;
 }
 .article-container .highlight {
@@ -201,7 +201,7 @@ blockquote {
   z-index: 0;
   min-width: 100%;
   height: 1.4rem;
-  background: #06060a;
+  background: #141414;
   content: "";
 }
 .article-container .highlight pre {
@@ -210,12 +210,12 @@ blockquote {
   border: none;
 }
 .article-container .highlight .line::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container .highlight .line::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container .highlight table {
   position: relative;
@@ -229,7 +229,7 @@ blockquote {
   z-index: 0;
   width: 100%;
   height: 1.4rem;
-  background: #06060a;
+  background: #141414;
   content: "";
 }
 .article-container .highlight td {
@@ -244,7 +244,7 @@ blockquote {
   padding: 0.2em 0 0.2em 0.7rem;
   width: 100%;
   height: 1.4em;
-  color: #8f93a2;
+  color: #eff;
   font-size: 1em;
   line-height: 1em;
 }
@@ -266,10 +266,10 @@ blockquote {
 .article-container .highlight figcaption a {
   float: right;
   padding-right: 10px;
-  color: #8f93a2;
+  color: #eff;
 }
 .article-container .highlight figcaption a:hover {
-  border-bottom-color: #8f93a2;
+  border-bottom-color: #eff;
 }
 .article-container .highlight figcaption+table {
   margin-top: 1em;
@@ -283,15 +283,15 @@ blockquote {
 .article-container .highlight .gutter pre {
   padding-right: 0.5rem;
   padding-left: 0.5rem;
-  background-color: #0f111a;
-  color: rgba(59,63,81,0.502);
+  background-color: #212121;
+  color: #424242;
   text-align: right;
 }
 .article-container .highlight .code pre {
   padding-right: 0.5rem;
   padding-left: 0.5rem;
   width: 100%;
-  background-color: #0f111a;
+  background-color: #212121;
 }
 .article-container .highlight .line {
   height: 1rem;
@@ -321,15 +321,15 @@ blockquote {
   color: #c792ea;
 }
 .article-container pre .comment {
-  color: #464b5d;
+  color: #4a4a4a;
 }
 .article-container pre .comment::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .comment::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .variable,
 .article-container pre .attribute,
@@ -357,8 +357,8 @@ blockquote {
 .article-container pre .tag .name::-moz-selection,
 .article-container pre .css .class::-moz-selection,
 .article-container pre .css .pseudo::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .variable::selection,
 .article-container pre .attribute::selection,
@@ -372,19 +372,19 @@ blockquote {
 .article-container pre .tag .name::selection,
 .article-container pre .css .class::selection,
 .article-container pre .css .pseudo::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .tag {
   color: #89ddff;
 }
 .article-container pre .tag::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .tag::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .number,
 .article-container pre .preprocessor,
@@ -400,8 +400,8 @@ blockquote {
 .article-container pre .params::-moz-selection,
 .article-container pre .constant::-moz-selection,
 .article-container pre .command::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .number::selection,
 .article-container pre .preprocessor::selection,
@@ -409,19 +409,19 @@ blockquote {
 .article-container pre .params::selection,
 .article-container pre .constant::selection,
 .article-container pre .command::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .built_in {
   color: #ffcb6b;
 }
 .article-container pre .built_in::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .built_in::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .ruby .class .title,
 .article-container pre .css .rules .attribute,
@@ -447,8 +447,8 @@ blockquote {
 .article-container pre .special::-moz-selection,
 .article-container pre .number::-moz-selection,
 .article-container pre .formula::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .ruby .class .title::selection,
 .article-container pre .css .rules .attribute::selection,
@@ -461,8 +461,8 @@ blockquote {
 .article-container pre .special::selection,
 .article-container pre .number::selection,
 .article-container pre .formula::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .keyword,
 .article-container pre .title,
@@ -472,14 +472,14 @@ blockquote {
 .article-container pre .keyword::-moz-selection,
 .article-container pre .title::-moz-selection,
 .article-container pre .css .hexcolor::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .keyword::selection,
 .article-container pre .title::selection,
 .article-container pre .css .hexcolor::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .function,
 .article-container pre .python .decorator,
@@ -499,8 +499,8 @@ blockquote {
 .article-container pre .perl .sub::-moz-selection,
 .article-container pre .javascript .title::-moz-selection,
 .article-container pre .coffeescript .title::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .function::selection,
 .article-container pre .python .decorator::selection,
@@ -510,8 +510,8 @@ blockquote {
 .article-container pre .perl .sub::selection,
 .article-container pre .javascript .title::selection,
 .article-container pre .coffeescript .title::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .tag .attr,
 .article-container pre .javascript .function {
@@ -519,13 +519,13 @@ blockquote {
 }
 .article-container pre .tag .attr::-moz-selection,
 .article-container pre .javascript .function::-moz-selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 .article-container pre .tag .attr::selection,
 .article-container pre .javascript .function::selection {
-  background: rgba(113,124,180,0.314);
-  color: #8f93a2;
+  background: rgba(97,97,97,0.314);
+  color: #eff;
 }
 #disqus_thread {
   margin-top: 1rem;
@@ -1392,7 +1392,7 @@ a.fancybox:focus {
   z-index: 1;
   display: inline-block;
   padding: 0 0.7rem;
-  color: #8f93a2;
+  color: #eff;
   font-weight: bold;
   font-size: 0.8rem;
   line-height: 1.4rem;
@@ -1414,7 +1414,7 @@ a.fancybox:focus {
   top: 0;
   right: 0;
   z-index: 1;
-  background: #06060a;
+  background: #141414;
   color: #89ddff;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
