@@ -578,7 +578,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
+    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -587,7 +587,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/04/03/UsageStats2-usageStatsServiceDealWithMessege/</loc>
+    <loc>https://lishuaiqi.top/2017/05/03/UsageStats3-userUsageStatsServiceLogicAnalysis/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -686,7 +686,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
+    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -695,7 +695,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/09/10/AppOps3-AppOpsWithMethods/</loc>
+    <loc>https://lishuaiqi.top/2017/08/13/AppOps2-AppOpsManager/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -740,15 +740,6 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/02/27/Handler4-messageQueueSourceCode/</loc>
-    
-    <lastmod>2018-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://lishuaiqi.top/2017/01/27/Handler3-looperSourceCode/</loc>
     
     <lastmod>2018-11-20</lastmod>
@@ -767,6 +758,24 @@
   </url>
   
   <url>
+    <loc>https://lishuaiqi.top/2017/02/27/Handler4-messageQueueSourceCode/</loc>
+    
+    <lastmod>2018-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
+    
+    <lastmod>2018-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://lishuaiqi.top/2016/04/21/JobScheduler4-JobSchedulerService-cancel/</loc>
     
     <lastmod>2018-11-20</lastmod>
@@ -777,15 +786,6 @@
   
   <url>
     <loc>https://lishuaiqi.top/2016/04/25/JobScheduler6-JobSchedulerService-jobControll/</loc>
-    
-    <lastmod>2018-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -848,6 +848,15 @@
   </url>
   
   <url>
+    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
+    
+    <lastmod>2018-11-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://lishuaiqi.top/2017/07/06/Permission3-checkPermissions/</loc>
     
     <lastmod>2018-11-20</lastmod>
@@ -866,15 +875,6 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2018/05/03/PMS7-installThroughAdb/</loc>
-    
-    <lastmod>2018-11-20</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://lishuaiqi.top/2017/08/25/Permission5-grantPermission/</loc>
     
     <lastmod>2018-11-20</lastmod>
@@ -884,7 +884,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2017/05/13/Permission2-packageManagerInitPermission/</loc>
+    <loc>https://lishuaiqi.top/2016/06/13/Process6-dumpsysMeminfoToShowAdj/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -893,7 +893,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/2016/06/13/Process6-dumpsysMeminfoToShowAdj/</loc>
+    <loc>https://lishuaiqi.top/2018/05/03/PMS7-installThroughAdb/</loc>
     
     <lastmod>2018-11-20</lastmod>
     
@@ -934,14 +934,14 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/tags/AlarmManager%E9%97%B9%E9%92%9F%E7%AE%A1%E7%90%86/</loc>
+    <loc>https://lishuaiqi.top/tags/ActivityManager%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/tags/ActivityManager%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86/</loc>
+    <loc>https://lishuaiqi.top/tags/AlarmManager%E9%97%B9%E9%92%9F%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -990,14 +990,14 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/tags/Handler%E7%BA%BF%E7%A8%8B%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/</loc>
+    <loc>https://lishuaiqi.top/tags/ContentProvider%E5%86%85%E5%AE%B9%E6%8F%90%E4%BE%9B%E8%80%85/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/tags/ContentProvider%E5%86%85%E5%AE%B9%E6%8F%90%E4%BE%9B%E8%80%85/</loc>
+    <loc>https://lishuaiqi.top/tags/Handler%E7%BA%BF%E7%A8%8B%E6%B6%88%E6%81%AF%E6%9C%BA%E5%88%B6/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1146,6 +1146,20 @@
   </url>
   
   <url>
+    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ContentProvider%E5%86%85%E5%AE%B9%E6%8F%90%E4%BE%9B%E8%80%85/</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ActivityManager%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/AlarmManager%E9%97%B9%E9%92%9F%E7%AE%A1%E7%90%86/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -1160,7 +1174,7 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ContentProvider%E5%86%85%E5%AE%B9%E6%8F%90%E4%BE%9B%E8%80%85/</loc>
+    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/Doze%E5%81%87%E5%AF%90%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1168,20 +1182,6 @@
   
   <url>
     <loc>https://lishuaiqi.top/categories/Java/</loc>
-    <lastmod>2025-12-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ActivityManager%E6%B4%BB%E5%8A%A8%E7%AE%A1%E7%90%86/</loc>
-    <lastmod>2025-12-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://lishuaiqi.top/categories/AndroidFramework%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/Doze%E5%81%87%E5%AF%90%E6%A8%A1%E5%BC%8F/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -1272,13 +1272,6 @@
   </url>
   
   <url>
-    <loc>https://lishuaiqi.top/categories/Java/Java-%E5%9F%BA%E7%A1%80/</loc>
-    <lastmod>2025-12-02</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://lishuaiqi.top/categories/%E6%8F%92%E4%BB%B6%E5%8C%96/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
@@ -1287,6 +1280,13 @@
   
   <url>
     <loc>https://lishuaiqi.top/categories/kotlin/</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://lishuaiqi.top/categories/Java/Java-%E5%9F%BA%E7%A1%80/</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
