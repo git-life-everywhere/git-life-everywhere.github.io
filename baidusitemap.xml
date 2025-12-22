@@ -313,15 +313,11 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2017/01/19/Handler2-handlerSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2017/01/27/Handler3-looperSourceCode/</loc>
+    <loc>https://lishuaiqi.top/2017/01/13/Handler1-handlerInit/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -333,19 +329,23 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
     <loc>https://lishuaiqi.top/2016/04/21/JobScheduler4-JobSchedulerService-cancel/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
-    <loc>https://lishuaiqi.top/2016/04/25/JobScheduler6-JobSchedulerService-jobControll/</loc>
+    <loc>https://lishuaiqi.top/2016/04/18/JobScheduler3-JobSchedulerService-schedule/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2017/01/27/Handler3-looperSourceCode/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
     <loc>https://lishuaiqi.top/2016/04/29/JobScheduler8-JobInfoAndJobStatusAndJobParameters/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
+    <loc>https://lishuaiqi.top/2016/04/25/JobScheduler6-JobSchedulerService-jobControll/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
@@ -377,15 +377,15 @@
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
+    <loc>https://lishuaiqi.top/2017/08/25/Permission5-grantPermission/</loc>
+    <lastmod>2018-11-20</lastmod>
+  </url>
+  <url>
     <loc>https://lishuaiqi.top/2017/08/13/Permission4-requestPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
     <loc>https://lishuaiqi.top/2018/05/03/PMS7-installThroughAdb/</loc>
-    <lastmod>2018-11-20</lastmod>
-  </url>
-  <url>
-    <loc>https://lishuaiqi.top/2017/08/25/Permission5-grantPermission/</loc>
     <lastmod>2018-11-20</lastmod>
   </url>
   <url>
