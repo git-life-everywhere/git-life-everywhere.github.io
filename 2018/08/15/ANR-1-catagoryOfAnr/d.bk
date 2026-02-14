@@ -1,0 +1,937 @@
+## MutableSharedFlow
+
+```java
+/**
+ * MutableSharedFlow 是一种可变的热数据流，它可以同时作为数据源和数据接收器。
+ * 与冷流（cold flow）不同，它的生命周期不依赖于收集者，多个收集者可以共享同一数据流。
+ * 
+ * 核心特性：
+ * 1. 线程安全 - 所有方法都支持并发调用
+ * 2. 背压处理 - 通过缓冲区策略控制数据流速，防止生产者过快导致消费者无法处理
+ * 3. 数据重播 - 新订阅者可以获取之前发送的数据（取决于配置）
+ * 4. 多订阅者支持 - 允许多个收集者同时监听数据流
+ */
+public interface MutableSharedFlow<T> : SharedFlow<T>, FlowCollector<T> {
+    
+    /**
+     * 发送一个值到数据流中。在某些情况下，调用可能会被挂起。
+     * 
+     * 工作原理：
+     * 1. 挂起发生的条件（必须同时满足）：
+     *    - 使用 BufferOverflow.SUSPEND 策略
+     *    - 存在活跃的订阅者
+     *    - 缓冲区已满
+     * 
+     * 2. 没有订阅者时的处理：
+     *    - 如果配置了重播缓存：值会被存入缓存（可能会替换旧值）
+     *    - 如果没有重播缓存：值会被直接丢弃
+     * 
+     * 3. 多线程支持：可以从多个协程并发调用此方法
+     * 
+     * @param value 要发送的值
+     */
+    override suspend fun emit(value: T)
+
+    /**
+     * 尝试发送值到数据流，此方法不会挂起调用者。
+     * 
+     * 与 suspend emit() 的主要区别：
+     * 1. 立即返回操作结果（成功或失败）
+     * 2. 只有在以下情况下返回 false：
+     *    - 使用 BufferOverflow.SUSPEND 策略
+     *    - 存在活跃的订阅者
+     *    - 缓冲区已满
+     * 
+     * 3. 如果没有订阅者：
+     *    - 总是返回 true
+     *    - 处理逻辑与 emit() 相同（存入缓存或丢弃）
+     * 
+     * 适用场景：
+     * - 在不支持挂起的上下文中发送数据
+     * - 需要立即知道发送是否成功的场景
+     * 
+     * @param value 要发送的值
+     * @return true 表示发送成功，false 表示因缓冲区满而失败
+     */
+    public fun tryEmit(value: T): Boolean
+
+    /**
+     * 当前活跃订阅者（收集者）的数量。
+     * 
+     * 特性说明：
+     * 1. 包装为 StateFlow，数量变化时会自动发出通知
+     * 2. 初始值为 0（刚创建时没有订阅者）
+     * 3. 值始终为非负整数
+     * 4. 订阅计数本身也是一个数据流，采用非合并（non-conflate）更新策略
+     * 
+     * 典型使用场景：
+     * 1. 资源管理 - 根据订阅者数量动态分配或释放资源
+     * 2. 生命周期管理 - 监控数据流的活跃状态
+     * 3. 系统监控 - 了解有多少组件正在监听此数据流
+     * 
+     * 示例：当出现第一个订阅者时启动服务，当最后一个订阅者离开时停止服务
+     */
+    public val subscriptionCount: StateFlow<Int>
+
+    /**
+     * 清空重播缓存，将其重置为空状态。
+     * 
+     * 影响范围：
+     * 1. 对新订阅者的影响：
+     *    - 新订阅者只能收到在此方法调用后发送的数据
+     *    - 之前缓存的所有历史数据都会被清除
+     * 
+     * 2. 对现有订阅者的影响：
+     *    - 现有订阅者不受影响，继续接收数据
+     *    - 仅清除了为未来新订阅者准备的缓存
+     * 
+     * 3. 特殊说明：
+     *    - MutableStateFlow 不支持此操作（会抛出异常）
+     *    - 对于 MutableStateFlow，需要通过直接更新 value 属性来重置
+     * 
+     * 4. 适用场景：
+     *    - 清理过期的历史数据
+     *    - 重置数据流，重新开始记录事件
+     *    - 释放不再需要的内存缓存
+     * 
+     * 注意：这是一个实验性 API，未来版本中可能会有变更或被移除。
+     */
+    @ExperimentalCoroutinesApi
+    public fun resetReplayCache()
+}
+```
+
+
+
+## tryEmitLocked
+
+```kotlin
+@Suppress("UNCHECKED_CAST") // 这个类型转换是安全的，我们知道自己在做什么
+private fun tryEmitLocked(value: T): Boolean {
+    // ---------- 快速通道：没人在听，那就不折腾了 ----------
+    // 如果当前一个收集器都没有，处理起来就简单多了。
+    // 不需要考虑背压、不需要协调慢的收集器，只需要管好重播缓存就行。
+    // 这个方法总是返回 true，因为没人收集，所以“发射”永远不会被卡住。
+    if (nCollectors == 0) return tryEmitNoCollectorsLocked(value)
+
+    // ---------- 正常流程：有收集器在听，得小心处理 ----------
+    // 下面要判断的核心问题是：现在缓冲区是不是真的“满”到塞不下了？
+    // 这个“满”有两个层面的意思：
+    // 1. 物理上满了 (bufferSize >= bufferCapacity)
+    // 2. 逻辑上被“卡住”了 (minCollectorIndex <= replayIndex)
+    // 
+    // 第二点很重要！比如，最慢的收集器已经跑到重播缓存前面去了，
+    // 那它肯定不需要队列最前面的老数据了，那些数据其实可以丢掉腾地方。
+    // 只有两个条件**同时**成立，才是真的“堵死了”，需要按背压策略处理。
+    if (bufferSize >= bufferCapacity && minCollectorIndex <= replayIndex) {
+        // 真的堵死了，看看老板（配置的策略）怎么说
+        when (onBufferOverflow) {
+            // 策略是“挂起”：那没办法，告诉外面“现在发不了”，让发射者歇会儿。
+            BufferOverflow.SUSPEND -> return false
+            // 策略是“丢新的”：行吧，这个新值我们不要了，但告诉外面“发送成功”（善意的谎言）。
+            BufferOverflow.DROP_LATEST -> return true
+            // 策略是“丢旧的”：牛！不管多堵，硬塞进去。塞完再想办法把队头最老的挤掉。
+            BufferOverflow.DROP_OLDEST -> { /* 不返回，继续往下走硬塞 */ }
+        }
+    }
+
+    // ---------- 开闸放水：把新值塞进缓冲区 ----------
+    enqueueLocked(value)
+    bufferSize++ // 记着，我们的缓冲区又多了一条数据
+
+    // ---------- 大扫除：如果塞完发现超容了，就把队头最老的丢掉 ----------
+    // 这可能发生在 DROP_OLDEST 策略下，也可能发生在虽然物理满了但能回收空间的情况下。
+    if (bufferSize > bufferCapacity) dropOldestLocked()
+
+    // ---------- 整理重播缓存：确保只保留约定数量的最新“记忆” ----------
+    // 重播缓存就像一个短期记忆，我们承诺新来的收集器能看到最近 `replay` 个值。
+    // 如果现在记忆里的值超过了承诺的数量，就把最早的那条忘掉（向前移动起点）。
+    val currentReplaySize = (bufferEndIndex - replayIndex).toInt()
+    if (currentReplaySize > replay) {
+        updateBufferLocked(replayIndex + 1, minCollectorIndex, bufferEndIndex, queueEndIndex)
+    }
+
+    // 搞定！新值已经安然躺在缓冲区里了。
+    return true
+}
+
+/**
+ * 孤独的发射者：当没有任何收集器在监听时，处理发射的简化逻辑。
+ * 此时没有背压问题，唯一要操心的就是维护好“重播缓存”这个留给未来客人的礼物。
+ */
+private fun tryEmitNoCollectorsLocked(value: T): Boolean {
+    // 安全断言：说好了没收集器才能走这个函数
+    assert { nCollectors == 0 }
+
+    // 如果老板说连重播缓存都不要（replay == 0），那这值现在就是“垃圾”。
+    // 直接假装发送成功，其实转身就扔了。
+    if (replay == 0) return true
+
+    // 老板说要重播缓存，那就把值存起来，作为给未来收集者的见面礼。
+    enqueueLocked(value)
+    bufferSize++
+
+    // 礼物盒（重播缓存）大小也是有限的（replay个）。
+    // 如果礼物塞多了，就把最早的那份礼物扔掉。
+    if (bufferSize > replay) dropOldestLocked()
+
+    // 因为没有收集者，所以“最慢收集者索引”这个值没有实际意义。
+    // 这里把它设为缓冲区末尾，意思是“假设虚拟的收集者已经跟上了所有数据”，
+    // 这样后续清理逻辑可以正确工作。
+    minCollectorIndex = head + bufferSize
+
+    return true // 一如既往地“成功”
+}
+```
+
+**核心逻辑点睛：**
+
+这个函数最精妙的设计在于 `if (bufferSize >= bufferCapacity && minCollectorIndex <= replayIndex)` 这个条件。
+
+它不是在问“缓冲区物理上满了吗？”，而是在问：“缓冲区是不是**被慢收集器堵得死死的，连一点回收空间都没有了**？”
+
+- `minCollectorIndex > replayIndex`：好消息！最慢的收集器已经跑到重播缓存前面去了。这意味着队头那些又老、又不在重播缓存里的数据，已经没人要了，是“可回收垃圾”，可以直接丢掉腾地方。所以**逻辑上不算真堵**。
+- 只有最慢的收集器连重播缓存都没消化完时，队头的数据才动不得，才是**真的堵**。
+
+这种设计让 `SharedFlow` 在背压处理上非常聪明和高效。
+
+
+
+
+
+## updateCollectorIndexLocked
+
+```java
+
+internal fun updateCollectorIndexLocked(oldIndex: Long): Array<Continuation<Unit>?> {
+    //【1】校验：旧索引必须大于等于当前最小收集器的数据索引
+    assert { oldIndex >= minCollectorIndex }
+    
+    //【2】如果旧索引不是最小的收集器索引，则状态无需改变，直接返回空数组
+    if (oldIndex > minCollectorIndex) return EMPTY_RESUMES // 没有变化，它不是最小值
+    
+    //【3】开始计算活跃收集器的新最小索引
+    val head = head // 缓冲区中最旧值的索引
+    var newMinCollectorIndex = head + bufferSize // 初始设为缓冲区末尾
+    
+    // 考虑同步共享流的特殊情况：可以超过第一个顺序发射者的位置
+    // 因为同步流的情况下，收集器是直接从发射器获取数据。   
+    if (bufferCapacity == 0 && queueSize > 0) newMinCollectorIndex++
+    
+    //【4】遍历所有活跃的收集器槽位，找到【真正的最小的数据索引】
+    forEachSlotLocked { slot ->
+        @Suppress("ConvertTwoComparisonsToRangeCheck") 
+        if (slot.index >= 0 && slot.index < newMinCollectorIndex) newMinCollectorIndex = slot.index
+    }
+    
+    //【5】校验：新的最小数据索引只能增长（或保持不变）只能：newMinCollectorIndex >= minCollectorIndex
+    assert { newMinCollectorIndex >= minCollectorIndex }
+    // 如果新的最小数据索引没有增加，则没有变化，直接返回
+    if (newMinCollectorIndex <= minCollectorIndex) return EMPTY_RESUMES
+    
+    //【6】更新 bufferEndIndex 缓存区边界索引。
+    // 计算如果我们丢弃不再需要的项且没有发射者被恢复时的新缓冲区大小：
+    // 我们必须保留从 newMinIndex 到缓冲区末尾的所有项（这部分是要被发送的缓存数据）
+    var newBufferEndIndex = bufferEndIndex // 可变变量，当等待者被恢复时会增长
+    
+    //【7】计算最大的发射器恢复数量（最多可以恢复多少个等待的发射者）
+    val maxResumeCount = if (nCollectors > 0) {
+        //【7.1】如果我们有 nCollectors 个收集器，我们可以恢复最多 maxResumeCount 个等待的发射者
+        // a) queueSize -> 我们有多少等待的发射者
+        // b) bufferCapacity - newBufferSize0 -> 在不超出缓冲区容量的情况下可以恢复的数量：
+        // 																			 也就是已经读取的数据个数；
+        val newBufferSize0 = (newBufferEndIndex - newMinCollectorIndex).toInt() // 缓冲区内未读取数据的大小（基于新最小索引）
+        // 在发射器个数和能再存入的数据个数之间取较小值；  
+        minOf(queueSize, bufferCapacity - newBufferSize0) 
+    } else {
+        //【7.2】如果没有收集器了，我们必须恢复所有等待的发射者（避免它们永远挂起）
+        queueSize // 等待发射者的数量（最多）
+    }
+    
+    //【8】准备要恢复的 continuation 协程体数组；
+    var resumes: Array<Continuation<Unit>?> = EMPTY_RESUMES
+    
+    //【9】计算发射器队列的结束索引（缓冲区结束索引 + 队列大小）
+    val newQueueEndIndex = newBufferEndIndex + queueSize
+    
+    //【10】如果需要恢复发射者（maxResumeCount > 0），那么就把 emitter 的值取出来，放到 buffer 区内。
+    // 然后恢复这些 emitter。 
+    if (maxResumeCount > 0) {
+        // 创建数组来存储要恢复的 continuation
+        resumes = arrayOfNulls(maxResumeCount)
+        var resumeCount = 0
+        val buffer = buffer!! // 获取缓冲区引用（非空断言）
+        
+        //【10.1】遍历等待的发射者队列区间
+        for (curEmitterIndex in newBufferEndIndex until newQueueEndIndex) {
+            // 获取当前位置的发射者
+            val emitter = buffer.getBufferAt(curEmitterIndex) 
+            if (emitter !== NO_VALUE) {
+                emitter as Emitter // 类型断言：必须是 Emitter 类
+                
+                // 1. 保存发射者的 continuation 以便后续恢复
+                resumes[resumeCount++] = emitter.cont
+                
+                // 2. 将原位置标记为 NO_VALUE（表示已取消或已处理）
+                buffer.setBufferAt(curEmitterIndex, NO_VALUE)
+                
+                // 3. 将发射者的值移到缓冲区的前部，就是替换 newBufferEndIndex 位置的值为数据；
+                buffer.setBufferAt(newBufferEndIndex, emitter.value)
+                newBufferEndIndex++ // 缓冲区结束索引向后移动
+                
+                // 4. 如果已经恢复了足够数量的发射者，停止恢复；
+                if (resumeCount >= maxResumeCount) break
+            }
+        }
+    }
+    
+    //【11】计算恢复后的实际缓冲区的总长度，如果前面恢复了发射器，那么新的 bufferEndIndex 增加了
+    // 超过了原来的 bufferEndIndex;
+    val newBufferSize1 = (newBufferEndIndex - head).toInt()
+    
+    //【12】特殊处理：当没有收集器时（nCollectors == 0）
+    // 我们恢复了所有排队的发射者，可能恢复了超过缓冲区容量的数量，因为 newBufferEndIndex 超过原有的 bufferEndIndex。
+    // 没有收集器，意味着这些新数据不被需要，所以 newMinCollectorIndex 应该指向新的 newBufferEndIndex。
+    // 这里是更新 newMinCollectorIndex 的位置，确保和收集器匹配。
+    if (nCollectors == 0) newMinCollectorIndex = newBufferEndIndex
+    
+    //【13】计算新的重放数据的起始索引 -> 限制为我们需要重放的项目数，考虑它只能增长
+    var newReplayIndex = maxOf(replayIndex, newBufferEndIndex - minOf(replay, newBufferSize1))
+    
+    // 对同步情况下取消的发射者（NO_VALUE）进行调整
+    if (bufferCapacity == 0 && newReplayIndex < newQueueEndIndex && 
+        buffer!!.getBufferAt(newReplayIndex) == NO_VALUE) {
+        newBufferEndIndex++ // 跳过 NO_VALUE 条目
+        newReplayIndex++    // 重放索引也相应增加
+    }
+    
+    //【14】更新缓冲区状态: replayIndex、minCollectorIndex、bufferSize、queueSize、隐式更新 head
+    // 计算 newHead，并清除掉 head 和 newHead 之前的废弃数据。
+    updateBufferLocked(newReplayIndex, newMinCollectorIndex, newBufferEndIndex, newQueueEndIndex)
+    
+    //【15】清理缓冲区尾部连续的无效条目，同步共享流不清理，中间的 NO_VALUE 会在 emit 的时候覆盖。
+    // 1、当发射者被取消时，其对应的 Emitter 对象会被标记为 NO_VALUE；
+    // 2、在 updateCollectorIndexLocked 中恢复发射者后，原位置会被设为 NO_VALUE；
+    cleanupTailLocked()
+    
+    //【16】恢复发射者协程，我们需要唤醒挂起的收集器
+    if (resumes.isNotEmpty()) resumes = findSlotsToResumeLocked(resumes)
+    
+    return resumes
+}
+```
+
+
+
+
+
+### ==updateBufferLocked==
+
+```java
+private fun updateBufferLocked(
+    newReplayIndex: Long,
+    newMinCollectorIndex: Long,
+    newBufferEndIndex: Long,
+    newQueueEndIndex: Long
+) {
+    // Compute new head value
+    val newHead = minOf(newMinCollectorIndex, newReplayIndex)
+    assert { newHead >= head }
+    // cleanup items we don't have to buffer anymore (because head is about to move)
+    //【1】head 只能向前移动，不能回退。
+    for (index in head until newHead) buffer!!.setBufferAt(index, null)
+    // update all state variables to newly computed values
+    replayIndex = newReplayIndex
+    minCollectorIndex = newMinCollectorIndex
+    bufferSize = (newBufferEndIndex - newHead).toInt()
+    queueSize = (newQueueEndIndex - newBufferEndIndex).toInt()
+      
+    // check our key invariants (just in case)
+    assert { bufferSize >= 0 }
+    assert { queueSize >= 0 }
+    assert { replayIndex <= this.head + bufferSize }
+}
+
+```
+
+这是 `SharedFlow` 的核心状态更新函数，负责在计算好新状态后原子性地更新所有缓冲区元数据。我们来逐部分分析：
+
+#### 函数目的
+**原子性地更新缓冲区的所有关键状态变量**，确保它们保持一致性。
+
+#### 参数含义
+- `newReplayIndex`：新的重放起始索引
+- `newMinCollectorIndex`：新的最小收集器索引
+- `newBufferEndIndex`：新的缓冲区结束索引
+- `newQueueEndIndex`：新的队列结束索引
+
+#### 核心逻辑分析
+
+##### 1. 计算新的 `head` 值
+```kotlin
+val newHead = minOf(newMinCollectorIndex, newReplayIndex)
+```
+**关键设计**：`head` 由 `minCollectorIndex` 和 `replayIndex` 中**更小的那个**决定！
+
+```kotlin
+// 为什么取最小值？
+// head 表示可以安全丢弃的数据边界
+// 1. 如果 minCollectorIndex 更小：说明有收集器需要旧数据，不能丢弃
+// 2. 如果 replayIndex 更小：说明重放缓存需要旧数据，不能丢弃
+// 所以取两者最小值，确保两者需求都满足
+```
+
+##### 2. 清理不再需要的数据
+```kotlin
+assert { newHead >= head }  // head 只能向前移动，不能回退
+for (index in head until newHead) buffer!!.setBufferAt(index, null)
+```
+清理 `head` 到 `newHead-1` 的数据：
+- 这些数据**既没有收集器需要**（因为 `index < newMinCollectorIndex`）
+- **也不在重放缓存中**（因为 `index < newReplayIndex`）
+- 可以安全设为 `null`，让GC回收内存
+
+##### 3. 更新所有状态变量
+```kotlin
+replayIndex = newReplayIndex
+minCollectorIndex = newMinCollectorIndex
+bufferSize = (newBufferEndIndex - newHead).toInt()
+queueSize = (newQueueEndIndex - newBufferEndIndex).toInt()
+```
+
+这里更新了**五个关键变量**（加上隐含更新的 `head`）：
+
+| 变量                | 计算公式                                    | 物理意义         |
+| ------------------- | ------------------------------------------- | ---------------- |
+| `head`              | `min(newMinCollectorIndex, newReplayIndex)` | 可丢弃的数据边界 |
+| `replayIndex`       | `newReplayIndex`                            | 重放缓存起始位置 |
+| `minCollectorIndex` | `newMinCollectorIndex`                      | 最慢收集器位置   |
+| `bufferSize`        | `newBufferEndIndex - newHead`               | 有效缓冲区大小   |
+| `queueSize`         | `newQueueEndIndex - newBufferEndIndex`      | 等待发射者数量   |
+
+##### 4. 完整性检查
+```kotlin
+assert { bufferSize >= 0 }
+assert { queueSize >= 0 }
+assert { replayIndex <= this.head + bufferSize }
+```
+
+第三个断言特别重要：
+```kotlin
+replayIndex ≤ head + bufferSize
+// 等价于：replayIndex ≤ newBufferEndIndex
+// 意味着：重放索引不能超过缓冲区末尾
+```
+
+#### 核心关系验证
+
+让我们验证这些更新如何保持 `SharedFlow` 的不变量：
+
+##### 不变量1：`head ≤ replayIndex ≤ bufferEndIndex`
+```kotlin
+// 已知：newHead = min(newMinCollectorIndex, newReplayIndex)
+// 所以：newHead ≤ newReplayIndex
+
+// bufferEndIndex = newHead + bufferSize
+//               = newHead + (newBufferEndIndex - newHead)
+//               = newBufferEndIndex
+
+// 所以：head ≤ replayIndex ≤ bufferEndIndex 成立
+```
+
+##### 不变量2：`head ≤ minCollectorIndex ≤ bufferEndIndex + queueSize`
+```kotlin
+// 已知：newHead ≤ newMinCollectorIndex（由 minOf 保证）
+// queueEndIndex = newBufferEndIndex + queueSize
+// 所以：newMinCollectorIndex ≤ newQueueEndIndex 通常成立
+```
+
+##### 不变量3：缓冲区容量限制
+```kotlin
+// bufferSize = newBufferEndIndex - newHead
+// 由于 newBufferEndIndex - newHead ≤ bufferCapacity
+// 所以 bufferSize ≤ bufferCapacity 成立
+```
+
+#### 场景示例
+
+##### 场景1：收集器读取数据
+```java
+初始状态：
+head=0, replayIndex=3, minCollectorIndex=2, bufferEndIndex=5
+buffer: [v0, v1, v2, v3, v4]
+
+收集器读取 v0,v1 后：
+newMinCollectorIndex = 2 (没变，最慢收集器还在 v2)
+newReplayIndex = 3 (没变)
+newHead = min(2, 3) = 2
+
+清理：索引 0,1 的数据设为 null
+更新：head=2, bufferSize=5-2=3
+```
+
+##### 场景2：新数据到达，重放索引更新
+```java
+初始状态：
+head=2, replayIndex=3, minCollectorIndex=4, bufferEndIndex=6
+replay=2
+
+新数据 v6 到达：
+newBufferEndIndex = 7 // 这个增加了。
+newBufferSize1 = 7 - 2 = 5
+newReplayIndex = max(3, 7 - min(2, 5)) = max(3, 5) = 5
+newHead = min(4, 5) = 4
+
+清理：索引 2,3 的数据设为 null（因为 head 从 2 移到 4）
+更新：head=4, replayIndex=5, bufferSize=7-4=3
+```
+
+#### 为什么需要原子性更新？
+
+这个函数在**锁内**调用，确保：
+1. **状态一致性**：所有变量一起更新，不会出现中间不一致状态
+2. **线程安全**：其他线程看到的是完整的新状态
+3. **操作原子性**：清理旧数据和设置新状态是一个原子操作
+
+#### 设计哲学
+
+`updateBufferLocked` 体现了 `SharedFlow` 的几个重要设计原则：
+
+1. **最小化数据保留**：只保留真正需要的数据（有收集器需要或重放需要）
+2. **及时内存回收**：一旦数据不再需要，立即设为 `null` 帮助GC
+3. **状态驱动**：所有清理和更新都基于计算好的新状态
+4. **不变量维护**：通过断言确保核心不变量始终成立
+
+这个函数是 `SharedFlow` 内存管理和状态同步的核心，确保在复杂的并发场景下，缓冲区状态始终保持一致和高效。
+
+
+
+### ==cleanupTailLocked==
+
+这体现了 `SharedFlow` 环形缓冲区管理的精妙设计。
+
+该方法不试图清理**所有** 的 NO_VALUE，只清理**尾部连续**的 NO_VALUE
+
+
+
+```java
+// Removes all the NO_VALUE items from the end of the queue and reduces its size
+private fun cleanupTailLocked() {
+    // If we have synchronous case, then keep one emitter queued
+    if (bufferCapacity == 0 && queueSize <= 1) return // return, don't clear it
+    val buffer = buffer!!
+    while (queueSize > 0 && buffer.getBufferAt(head + totalSize - 1) === NO_VALUE) {
+        queueSize--
+        buffer.setBufferAt(head + totalSize, null)
+    }
+}
+```
+
+#### 为什么需要这个清理？
+
+##### 1. 避免内存浪费
+
+```java
+// 如果没有清理，NO_VALUE会堆积：
+[Emitter1, Emitter2, NO_VALUE, NO_VALUE, NO_VALUE, ...]
+// 队列大小一直增长，但实际有效发射者很少
+```
+
+
+
+##### 2. 保持队列紧凑
+
+清理后，有效发射者集中在队列前部：
+
+```java
+清理前： [E1, E2, NO_VALUE, NO_VALUE]
+清理后： [E1, E2]
+下次发射者入队： [E1, E2, E3]  // 紧凑，无空隙
+```
+
+
+
+##### 3. 同步流特殊处理的必要性
+
+```java
+// 同步流 (bufferCapacity == 0) 的特殊逻辑：
+if (bufferCapacity == 0 && queueSize <= 1) return
+
+// 为什么？
+// 同步流依赖于发射者-收集者直接会合
+// 如果队列完全为空，新收集者无法与发射者会合
+// 保留一个 NO_VALUE 或 Emitter 可以维持会合机制
+```
+
+
+
+
+
+#### NO_VALUE 在队列中间的产生场景
+
+##### 1. 发射者被取消（中间位置）
+
+```kotlin
+// 原始队列：[E1, E2, E3, E4]
+// E2被取消 -> 变为NO_VALUE
+// 结果：[E1, NO_VALUE, E3, E4] ✅ NO_VALUE在中间！
+```
+
+
+
+##### 2. 选择性恢复发射者
+
+在 `updateCollectorIndexLocked` 中，恢复发射者时是**从队列头开始顺序恢复**的：
+
+```kotlin
+// 队列：[E1(v1), E2(v2), E3(v3), E4(v4)]
+// 假设只恢复前2个发射者（maxResumeCount=2）
+
+恢复E1：
+- resumes[0] = E1.cont
+- buffer[curIndex]=NO_VALUE  // E1位置变NO_VALUE
+- buffer[newBufferEndIndex]=v1
+- newBufferEndIndex++
+
+恢复E2：
+- resumes[1] = E2.cont  
+- buffer[curIndex]=NO_VALUE  // E2位置变NO_VALUE
+- buffer[newBufferEndIndex]=v2
+- newBufferEndIndex++
+
+// 结果队列：[NO_VALUE, NO_VALUE, E3, E4] ✅ NO_VALUE在头部连续
+```
+
+
+
+#### 那么 `cleanupTailLocked` 为什么从尾部倒序清理？
+
+##### 真正的设计原因：只清理**连续**的尾部 NO_VALUE
+
+
+
+**关键洞察**：`cleanupTailLocked` 并不试图清理**所有** 的 NO_VALUE，只清理**尾部连续**的 NO_VALUE。
+
+
+
+##### 为什么这样设计？
+
+###### 1. 队列中间 NO_VALUE 的 “空洞” 会被自然填补
+
+```kotlin
+// 示例：队列中间有NO_VALUE
+队列: [E1, NO_VALUE, E3, E4, NO_VALUE, NO_VALUE]
+                     ↑中间空洞      ↑尾部连续
+
+// 当新发射者到达时，会填补空洞：
+新发射者E5到达 -> 队列: [E1, E5, E3, E4, NO_VALUE, NO_VALUE]
+                 ↑ 填补了索引1的空洞
+
+// 尾部连续的 NO_VALUE 不会被立即填补
+// 所以专门清理尾部N O_VALUE
+```
+
+
+
+###### 2. 性能优化：避免遍历整个队列
+
+如果每次都要清理所有 NO_VALUE，需要 O (n) 遍历。而只清理尾部连续 NO_VALUE：
+
+- 通常只有尾部有连续 NO_VALUE
+- 平均时间复杂度接近 O (1)
+- 中间的空洞会被后续使用自然填补
+
+###### 3. 代码验证：看看实际行为
+
+让我们创建一个小测试来验证：
+
+```kotlin
+val sharedFlow = MutableSharedFlow<Int>(replay = 0, extraBufferCapacity = 5)
+
+// 场景1：发射者被取消（中间位置）
+GlobalScope.launch {
+    sharedFlow.emit(1) // E1
+}
+GlobalScope.launch {
+    delay(10)
+    sharedFlow.emit(2) // E2 - 假设被取消
+}
+GlobalScope.launch {
+    delay(20)
+    sharedFlow.emit(3) // E3
+}
+
+// 收集器连接后，队列可能变为：[E1, NO_VALUE, E3]
+// NO_VALUE 在索引 1（中间位置）
+```
+
+
+
+##### `cleanupTailLocked` 的实际作用
+
+###### 清理的是 “无用” 的尾部 NO_VALUE
+
+
+
+```kotlin
+// 队列结构分析：
+[有效发射者][中间NO_VALUE空洞][连续尾部NO_VALUE]
+           ↑                   ↑
+       会被自然填补        需要专门清理
+
+// cleanupTailLocked 只处理这部分 → [连续尾部NO_VALUE]
+```
+
+
+
+###### 为什么中间 NO_VALUE 不立即清理？
+
+1. **成本高**：需要移动后面所有元素或维护空洞链表
+2. **收益低**：空洞很快会被新发射者重用
+3. **设计哲学**：`SharedFlow` 采用 “懒清理” 策略，只在必要时最小化清理
+
+###### 实际源码佐证
+
+看 `SharedFlow` 的其他部分如何处理 NO_VALUE：
+
+```kotlin
+// 在 tryEmit 中寻找可用的队列位置：
+for (i in bufferEndIndex until queueEndIndex) {
+    if (buffer.getBufferAt(i) === NO_VALUE) {
+        // 找到了空洞！在这里放置新发射者
+        buffer.setBufferAt(i, value)
+        return true
+    }
+}
+// 如果没找到空洞，才添加到队列尾部
+```
+
+
+
+这说明：
+
+1. **新发射者会优先使用中间的 NO_VALUE 空洞**
+2. **尾部 NO_VALUE 只有在没找到空洞时才可能被使用**
+3. **所以专门清理尾部 NO_VALUE 是合理的**
+
+#### 总结
+
+我之前的回答有误，现在纠正：
+
+1. **NO_VALUE 完全可能出现在队列中间**（发射者取消、选择性恢复）
+2. **`cleanupTailLocked` 只清理尾部连续的 NO_VALUE**，不清理中间空洞
+3. **设计原因**：
+   - 中间空洞会被新发射者自然重用
+   - 尾部连续 NO_VALUE 是 “死空间”，需要专门清理
+   - 性能优化：避免全队列遍历
+
+这体现了 `SharedFlow` 的实用主义设计：接受一定的内存碎片（中间 NO_VALUE），换取更好的性能和更简单的实现。
+
+尾部清理保证了队列不会无限膨胀，中间空洞的懒重用平衡了内存和性能。
+
+
+
+
+
+### ==findSlotsToResumeLocked==
+
+参数 resumesIn 表示要恢复的发射器，这里是同时收集要恢复的收集器，会合并到一起：
+
+```kotlin
+private fun findSlotsToResumeLocked(resumesIn: Array<Continuation<Unit>?>): Array<Continuation<Unit>?> {
+    var resumes: Array<Continuation<Unit>?> = resumesIn
+    var resumeCount = resumesIn.size
+    forEachSlotLocked loop@{ slot ->
+        val cont = slot.cont ?: return@loop // only waiting slots
+        if (tryPeekLocked(slot) < 0) return@loop // only slots that can peek a value
+        if (resumeCount >= resumes.size) resumes = resumes.copyOf(maxOf(2, 2 * resumes.size))
+        resumes[resumeCount++] = cont
+        slot.cont = null // not waiting anymore
+    }
+    return resumes
+}
+```
+
+这个函数是 `SharedFlow` **唤醒机制**的核心，负责找到哪些挂起的收集器可以被恢复。它的原理很精妙，我来详细分析：
+
+#### 函数目的
+**找出所有可以立即恢复的等待收集器**，并将它们的 continuation 添加到恢复列表中。
+
+#### 核心逻辑：双重检查机制
+
+##### 1. 第一重检查：收集器是否在等待？
+```kotlin
+val cont = slot.cont ?: return@loop
+```
+- `slot.cont` 存储了收集器挂起时的 continuation
+- 如果为 `null`，说明收集器**不在等待状态**（可能在处理值）
+- 直接跳过这个槽位
+
+##### 2. 第二重检查：是否有值可读？
+```kotlin
+if (tryPeekLocked(slot) < 0) return@loop
+```
+- 调用 `tryPeekLocked(slot)` 尝试窥探是否有值可读
+- 如果返回 `-1`，说明**没有值可读**（需要继续等待）
+- 如果返回 `≥0` 的索引，说明**有值可读**！
+
+#### 唤醒的触发条件
+
+函数在两种情况下被调用：
+
+##### 情况1：发射者发送了新值
+```kotlin
+// 在 tryEmit -> emit -> tryEmitLocked 中
+if (nCollectors > 0) {
+    // 找到可以唤醒的收集器
+    resumes = findSlotsToResumeLocked(EMPTY_RESUMES)
+}
+```
+
+##### 情况2：收集器索引更新后
+```kotlin
+// 在 updateCollectorIndexLocked 中恢复发射者后
+if (resumes.isNotEmpty()) resumes = findSlotsToResumeLocked(resumes)
+// resumes 包含了刚恢复的发射者，现在也唤醒收集器
+```
+
+#### 动态数组扩容
+```kotlin
+if (resumeCount >= resumes.size) 
+    resumes = resumes.copyOf(maxOf(2, 2 * resumes.size))
+```
+- **动态扩容**：当数组不够时，扩容为2倍（至少2个）
+- **避免浪费**：初始可能传入空数组 `EMPTY_RESUMES`
+- **性能优化**：减少数组拷贝次数
+
+#### 处理挂起收集器的状态
+```kotlin
+resumes[resumeCount++] = cont  // 添加到恢复列表
+slot.cont = null               // 清除等待状态
+```
+**关键**：先保存 continuation，**然后立即清除 `slot.cont`**。这是因为：
+1. 避免重复唤醒
+2. 确保原子性：一旦决定唤醒，状态立即改变
+3. 防止竞争条件
+
+#### 完整唤醒流程示例
+
+##### 场景：一个值到达，多个收集器等待
+```
+初始状态：
+- 缓冲区: [v1, v2] (bufferEndIndex=2)
+- 收集器A: index=2, cont=非空（等待v3）
+- 收集器B: index=2, cont=非空（等待v3）
+- 收集器C: index=1, cont=null（正在处理v2）
+
+新值v3到达：
+1. v3存入缓冲区，bufferEndIndex=3
+2. 调用 findSlotsToResumeLocked
+
+遍历收集器：
+- 收集器A: cont非空 ✅, tryPeekLocked返回2（可读v3）✅ → 添加cont，cont=null
+- 收集器B: cont非空 ✅, tryPeekLocked返回2（可读v3）✅ → 添加cont，cont=null  
+- 收集器C: cont为null ❌ → 跳过
+
+结果：resumes = [contA, contB]
+```
+
+#### 为什么需要这个函数？
+
+##### 1. 批处理优化
+```kotlin
+// 一次唤醒多个收集器，减少锁竞争
+// 而不是每来一个值就唤醒一个收集器
+```
+
+##### 2. 避免"惊群效应"
+```kotlin
+// 只唤醒确实能读取到值的收集器
+// 而不是唤醒所有等待的收集器
+```
+
+##### 3. 状态一致性
+```kotlin
+// 在锁内完成所有决策，确保：
+// - 不会漏掉该唤醒的收集器
+// - 不会重复唤醒同一个收集器
+// - 状态更新是原子的
+```
+
+#### 与其他函数的协作
+
+##### 与 `tryPeekLocked` 的关系
+```kotlin
+// tryPeekLocked 逻辑回顾：
+if (index < bufferEndIndex) return index    // 有缓冲值
+if (bufferCapacity > 0) return -1L          // 有缓冲区但不满足条件
+if (index > head) return -1L                // 同步流中超前
+if (queueSize == 0) return -1L              // 没有等待的发射者
+return index                                // 可以与发射者会合
+
+// findSlotsToResumeLocked 只唤醒 tryPeekLocked ≥ 0 的收集器
+```
+
+##### 与 `awaitValue` 的关系
+```kotlin
+// 收集器挂起的流程：
+suspend fun awaitValue(slot: SharedFlowSlot): Any? {
+    // 1. 将当前 continuation 存入 slot.cont
+    slot.cont = coroutineContext[ContinuationInterceptor]!!
+    
+    // 2. 挂起，等待被唤醒
+    return suspendCoroutine { cont ->
+        // 被 findSlotsToResumeLocked 唤醒后从这里恢复
+    }
+}
+```
+
+#### 设计模式：观察者模式的优化实现
+
+这个函数实现了高效的"观察者通知"机制：
+
+```kotlin
+// 传统观察者模式（低效）：
+observers.forEach { observer ->
+    observer.onValue(value)  // 同步调用，可能阻塞
+}
+
+// SharedFlow模式（高效）：
+1. 值存入缓冲区
+2. 找出所有能读这个值的观察者
+3. 异步恢复它们的协程
+4. 观察者在自己协程中按自己节奏处理
+```
+
+#### 性能考虑
+
+##### 时间复杂度：O(n)
+- `n` = 活跃收集器数量
+- 每个收集器检查：`cont` 非空检查 + `tryPeekLocked`
+- `tryPeekLocked` 是 O(1) 操作
+
+##### 空间复杂度：O(k)
+- `k` = 可唤醒收集器数量
+- 动态数组，按需分配
+
+##### 锁内操作最小化
+- 只做必要检查
+- 不执行实际的值传递
+- 不调用用户代码
+
+#### 总结
+
+`findSlotsToResumeLocked` 的原理是：
+
+1. **双重过滤**：先检查是否在等待，再检查是否有值可读
+2. **批量处理**：一次找出所有可唤醒的收集器
+3. **状态原子更新**：保存 continuation 后立即清除等待状态
+4. **动态扩容**：支持任意数量的并发收集器
+
+这个设计确保了：
+- **高效唤醒**：只唤醒真正能继续执行的收集器
+- **公平性**：所有符合条件的收集器都会被唤醒
+- **线程安全**：所有决策在锁内完成
+- **资源友好**：动态数组避免内存浪费
+
+这是 `SharedFlow` 实现高吞吐量和低延迟的关键机制之一。
